@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lucis/widgets/rounded_popup_menu_button.dart';
 
-class PlacesListScreen extends StatelessWidget {
-  const PlacesListScreen({Key? key}) : super(key: key);
+class FavoritePlacesScreen extends StatelessWidget {
+  const FavoritePlacesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +26,8 @@ class PlacesListScreen extends StatelessWidget {
         ],
       ),
       body: const Center(
-        child: CircularProgressIndicator(),
-      ),
+          // child: CircularProgressIndicator(),
+          ),
     );
   }
 }
