@@ -25,6 +25,9 @@ class PlacesListScreen extends StatelessWidget {
           ),
         ],
       ),
+      body: const Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }
