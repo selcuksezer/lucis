@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucis/widgets/rounded_popup_menu_button.dart';
+import 'package:lucis/screens/add_place_screen.dart';
 
 class FavoritePlacesScreen extends StatelessWidget {
   const FavoritePlacesScreen({Key? key}) : super(key: key);
@@ -13,7 +14,9 @@ class FavoritePlacesScreen extends StatelessWidget {
             Icons.add,
             color: Colors.white,
           ),
-          onPressed: () {}),
+          onPressed: () {
+            Navigator.pushNamed(context, AddPlaceScreen.route);
+          }),
       appBar: AppBar(
         title: const Text('Favorite Places'),
         actions: [
