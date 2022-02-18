@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lucis/widgets/image_input.dart';
+import 'dart:io';
+import 'package:provider/provider.dart';
+import 'package:lucis/providers/favorite_places.dart';
 
 class AddPlaceScreen extends StatefulWidget {
   static const route = '/add-place';
@@ -12,6 +15,21 @@ class AddPlaceScreen extends StatefulWidget {
 
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
   final _titleController = TextEditingController();
+  File? _pickedImage;
+
+  void _selectImage(File? pickedImage) {
+    _pickedImage = pickedImage;
+  }
+
+  void _savePlace() {
+    if (_titleController.text.isEmpty || _pickedImage == null) {
+      return;
+    }
+    context
+        .read<FavoritePlaces>()
+        .addPlace(_titleController.text, _pickedImage);
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +43,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
         children: [
           Expanded(
             child: SingleChildScrollView(
+              padding: EdgeInsets.all(8.0),
               child: Column(
                 children: [
                   TextField(
@@ -32,17 +51,16 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                     decoration: const InputDecoration(labelText: 'Title'),
                   ),
                   const SizedBox(height: 10),
-                  ImageInput(),
+                  ImageInput(onSelectImage: _selectImage),
                 ],
               ),
             ),
           ),
           ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: _savePlace,
             style: ElevatedButton.styleFrom(
                 primary: Theme.of(context).colorScheme.secondary,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                // padding: MediaQuery.of(context).viewPadding,
                 padding: EdgeInsets.symmetric(
                     vertical: MediaQuery.of(context).viewPadding.bottom),
                 alignment: Alignment.center,
