@@ -2,9 +2,10 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:lucis/models/place.dart';
 import 'dart:io';
+import 'package:lucis/helpers/db_helper.dart';
 
 class FavoritePlaces with ChangeNotifier {
-  final List<Place> _items = [];
+  List<Place> _items = [];
 
   UnmodifiableListView<Place> get items {
     return UnmodifiableListView(_items);
@@ -19,6 +20,28 @@ class FavoritePlaces with ChangeNotifier {
           location: null);
       _items.add(newPlace);
       notifyListeners();
+      DBHelper.insert(
+        'places',
+        {
+          'id': newPlace.id,
+          'title': newPlace.title,
+          'image': newPlace.image.path,
+        },
+      );
     }
+  }
+
+  Future<void> fetchSetPlaces() async {
+    final dataList = await DBHelper.getData('places');
+    _items = dataList
+        .map(
+          (item) => Place(
+            id: item['id'],
+            title: item['title'],
+            image: File(item['image']),
+          ),
+        )
+        .toList();
+    notifyListeners();
   }
 }
