@@ -4,6 +4,7 @@ import 'package:path/path.dart' as path;
 class DBHelper {
   static Future<sql.Database> database() async {
     final dbPath = await sql.getDatabasesPath();
+    print(dbPath);
     return sql.openDatabase(path.join(dbPath, 'places.db '),
         onCreate: (db, version) {
       return db.execute(

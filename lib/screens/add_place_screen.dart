@@ -43,7 +43,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
                   TextField(

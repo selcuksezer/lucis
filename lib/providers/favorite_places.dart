@@ -21,7 +21,7 @@ class FavoritePlaces with ChangeNotifier {
       _items.add(newPlace);
       notifyListeners();
       DBHelper.insert(
-        'places',
+        'user_places',
         {
           'id': newPlace.id,
           'title': newPlace.title,
@@ -32,7 +32,7 @@ class FavoritePlaces with ChangeNotifier {
   }
 
   Future<void> fetchSetPlaces() async {
-    final dataList = await DBHelper.getData('places');
+    final dataList = await DBHelper.getData('user_places');
     _items = dataList
         .map(
           (item) => Place(
