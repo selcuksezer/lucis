@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:lucis/helpers/static_map_helper.dart';
+import 'package:lucis/models/place.dart';
+import 'package:lucis/screens/map_screen.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({Key? key}) : super(key: key);
@@ -13,6 +17,36 @@ class _LocationInputState extends State<LocationInput> {
 
   Future<void> _getCurrentUserLocation() async {
     final location = await Location().getLocation();
+
+    if (location.latitude != null && location.longitude != null) {
+      final staticMapURL = StaticMapHelper.getStaticMapURL(
+        latitude: location.latitude!,
+        longitude: location.longitude!,
+      );
+      setState(() {
+        _previewImageUrl = staticMapURL;
+      });
+    }
+  }
+
+  Future<void> _selectOnMap() async {
+    final location = await Location().getLocation();
+
+    if (location.latitude != null && location.longitude != null) {
+      final placeLocation = PlaceLocation(
+        latitude: location.latitude!,
+        longitude: location.longitude!,
+      );
+      final LatLng selectedLocation = await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => MapScreen(
+            initialLocation: placeLocation,
+            isSelecting: true,
+          ),
+        ),
+      );
+      print(selectedLocation);
+    }
   }
 
   @override
@@ -49,9 +83,9 @@ class _LocationInputState extends State<LocationInput> {
               ),
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: _selectOnMap,
               icon: const Icon(Icons.map),
-              label: const Text('Current Location'),
+              label: const Text('Select on Map'),
               style: TextButton.styleFrom(
                 textStyle: TextStyle(color: Theme.of(context).primaryColor),
               ),
