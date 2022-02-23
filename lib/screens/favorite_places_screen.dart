@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucis/screens/place_detail_screen.dart';
 import 'package:lucis/widgets/rounded_popup_menu_button.dart';
 import 'package:lucis/screens/add_place_screen.dart';
 import 'package:provider/provider.dart';
@@ -11,14 +12,15 @@ class FavoritePlacesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.indigo,
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pushNamed(context, AddPlaceScreen.route);
-          }),
+        backgroundColor: Colors.indigo,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Navigator.pushNamed(context, AddPlaceScreen.route);
+        },
+      ),
       appBar: AppBar(
         title: const Text('Favorite Places'),
         actions: [
@@ -50,7 +52,14 @@ class FavoritePlacesScreen extends StatelessWidget {
                                 FileImage(favoritePlaces.items[index].image),
                           ),
                           title: Text(favoritePlaces.items[index].title),
-                          onTap: () {},
+                          subtitle: Text(
+                              favoritePlaces.items[index].location?.address ??
+                                  ''),
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                                PlaceDetailScreen.route,
+                                arguments: favoritePlaces.items[index].id);
+                          },
                         ),
                       ),
                 child: const Center(

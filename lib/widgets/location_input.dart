@@ -6,7 +6,12 @@ import 'package:lucis/models/place.dart';
 import 'package:lucis/screens/map_screen.dart';
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({Key? key}) : super(key: key);
+  const LocationInput({
+    Key? key,
+    required this.onSelectLocation,
+  }) : super(key: key);
+
+  final Function(double latitude, double longitude) onSelectLocation;
 
   @override
   State<LocationInput> createState() => _LocationInputState();
@@ -15,17 +20,28 @@ class LocationInput extends StatefulWidget {
 class _LocationInputState extends State<LocationInput> {
   String? _previewImageUrl;
 
-  Future<void> _getCurrentUserLocation() async {
-    final location = await Location().getLocation();
+  void _showPreview(double latitude, double longitude) {
+    final staticMapURL = StaticMapHelper.getStaticMapURL(
+      latitude: latitude,
+      longitude: longitude,
+    );
+    setState(() {
+      _previewImageUrl = staticMapURL;
+    });
+  }
 
-    if (location.latitude != null && location.longitude != null) {
-      final staticMapURL = StaticMapHelper.getStaticMapURL(
-        latitude: location.latitude!,
-        longitude: location.longitude!,
-      );
-      setState(() {
-        _previewImageUrl = staticMapURL;
-      });
+  Future<void> _getCurrentUserLocation() async {
+    try {
+      final location = await Location().getLocation();
+      if (location.latitude != null && location.longitude != null) {
+        _showPreview(location.latitude!, location.longitude!);
+        widget.onSelectLocation(
+          location.latitude!,
+          location.longitude!,
+        );
+      }
+    } catch (e) {
+      return;
     }
   }
 
@@ -45,7 +61,11 @@ class _LocationInputState extends State<LocationInput> {
           ),
         ),
       );
-      print(selectedLocation);
+      _showPreview(selectedLocation.latitude, selectedLocation.longitude);
+      widget.onSelectLocation(
+        selectedLocation.latitude,
+        selectedLocation.longitude,
+      );
     }
   }
 
