@@ -4,7 +4,7 @@ import 'package:lucis/screens/map_screen.dart';
 import 'package:provider/provider.dart';
 
 class PlaceDetailScreen extends StatelessWidget {
-  static const route = '/place-detail';
+  static const route = 'place-detail';
 
   const PlaceDetailScreen({Key? key}) : super(key: key);
 

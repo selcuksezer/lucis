@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lucis/screens/favorite_places_screen.dart';
 import 'package:lucis/screens/add_place_screen.dart';
+import 'package:lucis/screens/home_screen.dart';
+import 'package:lucis/screens/image_import_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:lucis/providers/favorite_places.dart';
 import 'screens/place_detail_screen.dart';
@@ -16,8 +18,9 @@ class Lucis extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => FavoritePlaces(),
       child: MaterialApp(
-        home: const FavoritePlacesScreen(),
+        home: const HomeScreen(),
         routes: {
+          ImageImportScreen.route: (context) => const ImageImportScreen(),
           AddPlaceScreen.route: (context) => const AddPlaceScreen(),
           PlaceDetailScreen.route: (context) => const PlaceDetailScreen(),
         },

@@ -7,7 +7,7 @@ import 'package:lucis/providers/favorite_places.dart';
 import 'package:lucis/models/place.dart';
 
 class AddPlaceScreen extends StatefulWidget {
-  static const route = '/add-place';
+  static const route = 'add-place';
 
   const AddPlaceScreen({Key? key}) : super(key: key);
 
