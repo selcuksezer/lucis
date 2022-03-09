@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lucis/providers/favorite_places.dart';
+import 'package:lucis/view_models/favorite_places.dart';
 import 'package:lucis/screens/map_screen.dart';
 import 'package:provider/provider.dart';
 

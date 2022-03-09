@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:lucis/screens/image_upload_screen.dart';
+import 'package:lucis/view_models/image_view_model.dart';
+import 'package:lucis/view_models/user_view_model.dart';
+import 'package:provider/provider.dart';
 
 class ImageImportScreen extends StatelessWidget {
   static const route = 'image-import';
@@ -8,10 +11,13 @@ class ImageImportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageViewModel = Provider.of<ImageViewModel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white54,
+        backgroundColor: Colors.black87,
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -20,8 +26,21 @@ class ImageImportScreen extends StatelessWidget {
           children: [
             GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: () {
-                print('camera tapped');
+              onTap: () async {
+                try {
+                  final user =
+                      await userViewModel.getUser('lukas', 'bogdanoff');
+                  if (user == null) {
+                    return;
+                  }
+                  final image = await imageViewModel.takePicture(user.id);
+                  if (image != null) {
+                    Navigator.of(context).pushNamed(ImageUploadScreen.route,
+                        arguments: image.image);
+                  }
+                } catch (e) {
+                  print(e);
+                }
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -29,7 +48,7 @@ class ImageImportScreen extends StatelessWidget {
                   Icon(
                     Icons.camera_alt_rounded,
                     size: width / 3.0,
-                    color: Colors.black54,
+                    color: Colors.orange,
                   ),
                   const Text(
                     'Using Camera',
@@ -50,8 +69,25 @@ class ImageImportScreen extends StatelessWidget {
             ),
             GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: () {
-                print('gallery tapped');
+              onTap: () async {
+                try {
+                  final user =
+                      await userViewModel.getUser('lukas', 'bogdanoff');
+
+                  if (user == null) {
+                    return;
+                  }
+
+                  final image =
+                      await imageViewModel.pickImageFromGallery(user.id);
+                  if (image != null) {
+                    Navigator.of(context).pushNamed(ImageUploadScreen.route,
+                        arguments: image.image);
+                  }
+                } catch (e, tr) {
+                  print(e);
+                  print(tr);
+                }
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,7 +96,7 @@ class ImageImportScreen extends StatelessWidget {
                   Icon(
                     Icons.image,
                     size: width / 3.0,
-                    color: Colors.black54,
+                    color: Colors.orange,
                   ),
                   const Text(
                     'From Gallery',

@@ -3,7 +3,7 @@ import 'package:lucis/screens/place_detail_screen.dart';
 import 'package:lucis/widgets/rounded_popup_menu_button.dart';
 import 'package:lucis/screens/add_place_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:lucis/providers/favorite_places.dart';
+import 'package:lucis/view_models/favorite_places.dart';
 
 class FavoritePlacesScreen extends StatelessWidget {
   const FavoritePlacesScreen({Key? key}) : super(key: key);

@@ -3,7 +3,7 @@ import 'package:lucis/widgets/image_input.dart';
 import 'package:lucis/widgets/location_input.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
-import 'package:lucis/providers/favorite_places.dart';
+import 'package:lucis/view_models/favorite_places.dart';
 import 'package:lucis/models/place.dart';
 
 class AddPlaceScreen extends StatefulWidget {

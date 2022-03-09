@@ -43,6 +43,9 @@ app.*.map.json
 # api related
 lib/auth
 
+# firebase related
+lib/firebase_options.dart
+
 # Android Studio will place build artifacts here
 /android/app/debug
 /android/app/profile
