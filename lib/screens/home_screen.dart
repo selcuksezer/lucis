@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucis/constants.dart';
 import 'package:lucis/screens/feed_screen.dart';
 import 'package:lucis/screens/image_import_screen.dart';
+import 'package:lucis/screens/map_screen.dart';
 import 'package:lucis/view_models/location_view_model.dart';
 import 'package:lucis/view_models/user_view_model.dart';
 import 'package:lucis/widgets/vertical_icon_button.dart';
@@ -91,7 +92,29 @@ class HomeScreen extends StatelessWidget {
                         ),
                         VerticalIconButton(
                           icon: kMapIcon,
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              if (locationViewModel.location.geoLocation ==
+                                  null) {
+                                print('starting');
+                                await locationViewModel.retryUpdateLocation();
+                                print('ended');
+                              }
+                            } catch (e) {
+                              print(e);
+                            }
+                            if (locationViewModel.location.geoLocation !=
+                                null) {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MapScreen(
+                                    initialLocation: locationViewModel.location,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
                           label: 'MAP',
                         ),
                       ],

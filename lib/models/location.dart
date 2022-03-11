@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart' as loc;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Location {
   Location(this.geoLocation);
@@ -18,10 +19,27 @@ class Location {
         );
 
   Location.fromLocationService() {
-    getLocation();
+    getLocation().then((location) => geoLocation = location.geoLocation);
   }
 
+  Location.fromLatLng(LatLng latLng)
+      : geoLocation = Geoflutterfire().point(
+          latitude: latLng.latitude,
+          longitude: latLng.longitude,
+        );
+
   GeoFirePoint? geoLocation;
+
+  LatLng? getLatLng() {
+    if (geoLocation != null) {
+      return LatLng(
+        geoLocation!.latitude,
+        geoLocation!.longitude,
+      );
+    } else {
+      return null;
+    }
+  }
 
   Future<Location> getLocation() async {
     var location = loc.Location();
