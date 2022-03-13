@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'package:lucis/helpers/firebase_firestore_helper.dart';
 import 'package:lucis/helpers/firebase_storage_helper.dart';
 import 'package:lucis/models/location.dart';
 import 'package:lucis/models/image.dart';
@@ -42,7 +41,6 @@ class Feed {
     while (!streamOn) {
       await Future.delayed(const Duration(milliseconds: 50));
     }
-    print(_feed);
     final index = pageSize * pageNumber;
     if (index <= _feed.length) {
       return _feed.sublist(index);

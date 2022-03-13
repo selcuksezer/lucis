@@ -59,6 +59,24 @@ class User {
     }
   }
 
+  static Future<User?> getExistingUser({
+    required String userID,
+  }) async {
+    final userExists = await FirebaseFirestoreHelper.userExists(userID);
+    if (!userExists) {
+      return null;
+    }
+    final userData = await FirebaseFirestoreHelper.queryUserData(userID);
+    return User._(
+      id: userData['userID'],
+      name: userData['userName'],
+      lucis: userData['lucis'],
+      favorites: userData['favorites'] ?? [],
+      pins: userData['pins'] ?? [],
+      images: userData['images'] ?? [],
+    );
+  }
+
   void addNewImage(String imageID) {
     images.add(imageID);
     lucis++;

@@ -59,8 +59,7 @@ class HomeScreen extends StatelessWidget {
                           icon: kExploreIcon,
                           onPressed: () async {
                             try {
-                              final user = await userViewModel.getUser(
-                                  'eric', 'cartman');
+                              final user = await userViewModel.getUser('eric');
                               if (user == null) {
                                 return;
                               }

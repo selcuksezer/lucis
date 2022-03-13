@@ -108,4 +108,70 @@ class FirebaseStorageHelper {
     }
     return imageURLs;
   }
+
+  static Future<Map<String?, List<File>>> downloadImageFilesPaginated(
+      {required String userID, required int limit, String? pageToken}) async {
+    List<File> downloadedFiles = [];
+    Directory tempDir = await getTemporaryDirectory();
+    if (pageToken == null) {
+      final listResult = await FirebaseStorage.instance
+          .ref('$userID/')
+          .list(ListOptions(maxResults: limit));
+
+      for (var ref in listResult.items) {
+        File downloadToFile =
+            File('${tempDir.path}/storage_download_temp_${ref.name}');
+        await ref
+            .writeToFile(downloadToFile)
+            .then((p0) => downloadedFiles.add(downloadToFile));
+      }
+      return {listResult.nextPageToken: downloadedFiles};
+    }
+
+    final listResult = await FirebaseStorage.instance.ref('$userID/').list(
+          ListOptions(
+            maxResults: limit,
+            pageToken: pageToken,
+          ),
+        );
+
+    for (var ref in listResult.items) {
+      File downloadToFile =
+          File('${tempDir.path}/storage_download_temp_${ref.name}');
+      await ref
+          .writeToFile(downloadToFile)
+          .then((p0) => downloadedFiles.add(downloadToFile));
+    }
+    return {listResult.nextPageToken: downloadedFiles};
+  }
+
+  static Future<Map<String?, List<String>>> downloadImageURLsPaginated({
+    required String userID,
+    required int limit,
+    String? pageToken,
+  }) async {
+    List<String> urls = [];
+    if (pageToken == null) {
+      final listResult = await FirebaseStorage.instance
+          .ref('$userID/')
+          .list(ListOptions(maxResults: limit));
+
+      for (var ref in listResult.items) {
+        await ref.getDownloadURL().then((url) => urls.add(url));
+      }
+      return {listResult.nextPageToken: urls};
+    }
+
+    final listResult = await FirebaseStorage.instance.ref('$userID/').list(
+          ListOptions(
+            maxResults: limit,
+            pageToken: pageToken,
+          ),
+        );
+
+    for (var ref in listResult.items) {
+      await ref.getDownloadURL().then((url) => urls.add(url));
+    }
+    return {listResult.nextPageToken: urls};
+  }
 }

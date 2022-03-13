@@ -313,4 +313,46 @@ class FirebaseFirestoreHelper {
         .catchError((error) => isSuccess = false);
     return isSuccess;
   }
+
+  static Future<bool> addAuth({
+    required String userID,
+    required String email,
+  }) async {
+    bool isSuccess = false;
+    final authRef = FirebaseFirestore.instance.collection('auth');
+    await authRef
+        .doc(email)
+        .set({userID: userID})
+        .then((value) => isSuccess = true)
+        .catchError((onError) => isSuccess = false);
+    return isSuccess;
+  }
+
+  static Future<bool> checkAuth({
+    required String userID,
+    required String email,
+  }) async {
+    bool isSuccess = false;
+    final authRef = FirebaseFirestore.instance.collection('auth');
+    await authRef.doc(email).get().then((value) {
+      if (value.data()?.keys.first == userID) {
+        isSuccess = true;
+      } else {
+        isSuccess = false;
+      }
+    }).catchError((onError) {
+      isSuccess = false;
+    });
+    return isSuccess;
+  }
+
+  static Future<String?> getAuth({
+    required String email,
+  }) async {
+    final authRef = FirebaseFirestore.instance.collection('auth');
+    await authRef.doc(email).get().then((value) {
+      return value.data()?.keys.first;})
+        .catchError((onError) => null);
+    return null;
+  }
 }

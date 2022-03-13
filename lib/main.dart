@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lucis/screens/home_screen.dart';
 import 'package:lucis/screens/image_import_screen.dart';
 import 'package:lucis/screens/image_upload_screen.dart';
+import 'package:lucis/screens/login_screen.dart';
+import 'package:lucis/screens/registration_screen.dart';
+import 'package:lucis/screens/user_screen.dart';
+import 'package:lucis/screens/welcome_screen.dart';
 import 'package:lucis/view_models/image_view_model.dart';
 import 'package:lucis/view_models/location_view_model.dart';
 import 'package:lucis/view_models/user_view_model.dart';
@@ -30,8 +34,12 @@ class Lucis extends StatelessWidget {
             create: (_) => LocationViewModel()),
       ],
       child: MaterialApp(
-        initialRoute: HomeScreen.route,
+        home: WelcomeScreen(),
+        // initialRoute: HomeScreen.route,
         routes: {
+          WelcomeScreen.route: (context) => const WelcomeScreen(),
+          LoginScreen.route: (context) => const LoginScreen(),
+          RegistrationScreen.route: (context) => const RegistrationScreen(),
           HomeScreen.route: (context) => const HomeScreen(),
           ImageImportScreen.route: (context) => const ImageImportScreen(),
           ImageUploadScreen.route: (context) => const ImageUploadScreen(),

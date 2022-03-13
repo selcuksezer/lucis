@@ -74,6 +74,13 @@ class Image {
     return result;
   }
 
+  Future<String?> getImageDownloadURL(String id) async {
+    return await FirebaseStorageHelper.downloadImageURL(
+      userID: id,
+      imageID: imageID,
+    );
+  }
+
   Future<void> saveImageToDocuments() async {
     if (image != null) {
       final appDir = await sys_path.getApplicationDocumentsDirectory();

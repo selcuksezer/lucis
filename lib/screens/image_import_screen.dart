@@ -28,8 +28,7 @@ class ImageImportScreen extends StatelessWidget {
               behavior: HitTestBehavior.translucent,
               onTap: () async {
                 try {
-                  final user =
-                      await userViewModel.getUser('lukas', 'bogdanoff');
+                  final user = await userViewModel.getUser('lukas');
                   if (user == null) {
                     return;
                   }
@@ -71,8 +70,7 @@ class ImageImportScreen extends StatelessWidget {
               behavior: HitTestBehavior.translucent,
               onTap: () async {
                 try {
-                  final user =
-                      await userViewModel.getUser('lukas', 'bogdanoff');
+                  final user = await userViewModel.getUser('lukas');
 
                   if (user == null) {
                     return;
