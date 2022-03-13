@@ -46,6 +46,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   void initState() {
+    var identityHashCode2 = identityHashCode(context);
     feedViewModel = FeedViewModel(
       userID: widget.userID,
       location: widget.location,
@@ -62,6 +63,8 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var identityHashCode1 = identityHashCode(context);
+
     return Material(
       child: Stack(alignment: Alignment.topLeft, children: [
         PagedListView(

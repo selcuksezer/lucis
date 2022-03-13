@@ -53,9 +53,10 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
                   isDone = true;
                   isLoading = false;
                 });
+
+                print('$isSuccess popping to home');
                 if (isSuccess) {
-                  Navigator.of(context)
-                      .popUntil(ModalRoute.withName(HomeScreen.route));
+                  Navigator.of(context).pop();
                 }
               },
               icon: const Icon(

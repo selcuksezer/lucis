@@ -11,7 +11,7 @@ class UserViewModel {
     pagingController.addPageRequestListener(_fetchNextPage);
   }
 
-  static const pageSize = 50;
+  static const pageSize = 3;
 
   User? user;
   List<File> images = [];

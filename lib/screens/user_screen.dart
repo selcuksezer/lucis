@@ -192,7 +192,7 @@ class _UserScreenState extends State<UserScreen> {
                 },
               ),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+                crossAxisCount: 1,
               ),
             ),
           ),
