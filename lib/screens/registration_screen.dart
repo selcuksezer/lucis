@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lucis/helpers/firebase_firestore_helper.dart';
-import 'package:lucis/screens/home_screen.dart';
 import 'package:lucis/screens/splash_screen.dart';
 import 'package:lucis/widgets/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -137,9 +136,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       setState(() {
                         showSpinner = false;
                       });
-
-                      Navigator.pushNamed(context, SplashScreen.route,
-                          arguments: _userID);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SplashScreen(
+                            userID: _userID!,
+                          ),
+                        ),
+                      );
                     } catch (e) {
                       setState(() {
                         showSpinner = false;

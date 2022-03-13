@@ -341,6 +341,7 @@ class FirebaseFirestoreHelper {
         isSuccess = false;
       }
     }).catchError((onError) {
+      print(onError);
       isSuccess = false;
     });
     return isSuccess;
@@ -349,10 +350,11 @@ class FirebaseFirestoreHelper {
   static Future<String?> getAuth({
     required String email,
   }) async {
+    String? id;
     final authRef = FirebaseFirestore.instance.collection('auth');
     await authRef.doc(email).get().then((value) {
-      return value.data()?.keys.first;})
-        .catchError((onError) => null);
-    return null;
+      id = value.data()?.keys.first;
+    }).catchError((onError) => null);
+    return id;
   }
 }

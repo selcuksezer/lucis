@@ -3,15 +3,22 @@ import 'package:lucis/constants.dart';
 import 'package:lucis/screens/feed_screen.dart';
 import 'package:lucis/screens/image_import_screen.dart';
 import 'package:lucis/screens/map_screen.dart';
+import 'package:lucis/screens/user_screen.dart';
 import 'package:lucis/view_models/location_view_model.dart';
 import 'package:lucis/view_models/user_view_model.dart';
 import 'package:lucis/widgets/vertical_icon_button.dart';
 import 'package:provider/provider.dart';
+import 'package:lucis/models/location.dart';
+import 'package:lucis/models/user.dart';
 
 class HomeScreen extends StatelessWidget {
   static const route = 'home-screen';
 
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key, required this.user, required this.location})
+      : super(key: key);
+
+  final User user;
+  final Location location;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +54,16 @@ class HomeScreen extends StatelessWidget {
                         ),
                         VerticalIconButton(
                           icon: kYouIcon,
-                          onPressed: () {},
+                          onPressed: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UserScreen(
+                                  userID: user.id,
+                                ),
+                              ),
+                            );
+                          },
                           label: 'YOU',
                         ),
                       ],
@@ -58,30 +74,28 @@ class HomeScreen extends StatelessWidget {
                         VerticalIconButton(
                           icon: kExploreIcon,
                           onPressed: () async {
-                            try {
-                              final user = await userViewModel.getUser('eric');
-                              if (user == null) {
-                                return;
-                              }
-                              if (locationViewModel.location.geoLocation ==
-                                  null) {
-                                print('starting');
-                                await locationViewModel.retryUpdateLocation();
-                                print('ended');
-                              }
-                            } catch (e) {
-                              print(e);
-                            }
+                            // try {
+                            //   final user = await userViewModel.getUser('eric');
+                            //   if (user == null) {
+                            //     return;
+                            //   }
+                            //   if (locationViewModel.location.geoLocation ==
+                            //       null) {
+                            //     print('starting');
+                            //     await locationViewModel.retryUpdateLocation();
+                            //     print('ended');
+                            //   }
+                            // } catch (e) {
+                            //   print(e);
+                            // }
 
-                            if (userViewModel.user?.id != null &&
-                                locationViewModel.location.geoLocation !=
-                                    null) {
+                            if (location.geoLocation != null) {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => FeedScreen(
-                                    userID: userViewModel.user!.id,
-                                    location: locationViewModel.location,
+                                    userID: user.id,
+                                    location: location,
                                   ),
                                 ),
                               );
@@ -92,23 +106,22 @@ class HomeScreen extends StatelessWidget {
                         VerticalIconButton(
                           icon: kMapIcon,
                           onPressed: () async {
-                            try {
-                              if (locationViewModel.location.geoLocation ==
-                                  null) {
-                                print('starting');
-                                await locationViewModel.retryUpdateLocation();
-                                print('ended');
-                              }
-                            } catch (e) {
-                              print(e);
-                            }
-                            if (locationViewModel.location.geoLocation !=
-                                null) {
+                            // try {
+                            //   if (locationViewModel.location.geoLocation ==
+                            //       null) {
+                            //     print('starting');
+                            //     await locationViewModel.retryUpdateLocation();
+                            //     print('ended');
+                            //   }
+                            // } catch (e) {
+                            //   print(e);
+                            // }
+                            if (location.geoLocation != null) {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => MapScreen(
-                                    initialLocation: locationViewModel.location,
+                                    initialLocation: location,
                                   ),
                                 ),
                               );
