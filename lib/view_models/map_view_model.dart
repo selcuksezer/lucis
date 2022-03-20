@@ -8,6 +8,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:lucis/models/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lucis/helpers/firebase_storage_helper.dart';
+import 'package:lucis/widgets/avatar_marker.dart';
 
 enum MarkerType {
   avatar,
@@ -16,7 +17,7 @@ enum MarkerType {
 
 class MapViewModel {
   static const updateRange = 5.0; // km
-  static const initialMarkerSize = 30.0;
+  static const initialMarkerSize = 50.0;
   static const initialZoom = 16.0;
 
   MapViewModel(this._updateUI, {required this.location});
@@ -27,7 +28,7 @@ class MapViewModel {
   late Stream<List<DocumentSnapshot>> stream;
   Map<MarkerId, MarkerData> imageMarkers = {};
   Map<MarkerId, MarkerData> avatarMarkers = {};
-  Map<MarkerId, File> imageFileCache = {};
+  Map<MarkerId, String> imageURLCache = {};
   Map<MarkerId, File?> avatarFileCache = {};
   MarkerType markerDisplayType = MarkerType.avatar;
   bool streamOn = false;
@@ -92,10 +93,9 @@ class MapViewModel {
 
   void updateMarkers() {
     imageMarkers.forEach((markerID, imageMarker) {
-      imageMarker.child = CircleAvatar(
-        backgroundImage: FileImage(imageFileCache[markerID]!),
-        maxRadius: markerSize,
-      );
+      imageMarker.child =
+          AvatarMarker(radius: markerSize, url: imageURLCache[markerID]!);
+
       if (avatarFileCache[markerID] != null) {
         avatarMarkers[markerID]!.child = CircleAvatar(
           backgroundImage: FileImage(avatarFileCache[markerID]!),
@@ -129,13 +129,13 @@ class MapViewModel {
 
   void onMarkerTap(MarkerId markerID) {
     print('$markerID tapped');
-    final imageFile = imageFileCache[markerID];
+    final imageFile = imageURLCache[markerID];
     if (imageFile != null) {
       showModalBottomSheet(
           isScrollControlled: true,
           context: context,
           builder: (context) {
-            return Image.file(
+            return Image.network(
               imageFile,
               width: double.infinity,
             );
@@ -152,11 +152,11 @@ class MapViewModel {
 
   Future<void> _toMarker(List<DocumentSnapshot<Object?>> docList) async {
     for (var doc in docList) {
-      final imageFile = await FirebaseStorageHelper.downloadImage(
+      final imageURL = await FirebaseStorageHelper.downloadImageURL(
         userID: doc['userID'],
         imageID: doc['imageID'],
       );
-      if (imageFile == null) {
+      if (imageURL == null) {
         continue;
       }
       final avatarFile = await FirebaseStorageHelper.downloadAvatar(
@@ -166,19 +166,17 @@ class MapViewModel {
       final markerID = MarkerId('${doc['imageID']}');
       ////////////////
       final imageCustomMarker = MarkerData(
-          marker: Marker(
-            consumeTapEvents: true,
-            onTap: () {
-              onMarkerTap(markerID);
-            },
-            markerId: markerID,
-            position: LatLng(doc['position']['geopoint'].latitude,
-                doc['position']['geopoint'].longitude),
-          ),
-          child: CircleAvatar(
-            backgroundImage: FileImage(imageFile),
-            maxRadius: markerSize,
-          ));
+        marker: Marker(
+          consumeTapEvents: true,
+          onTap: () {
+            onMarkerTap(markerID);
+          },
+          markerId: markerID,
+          position: LatLng(doc['position']['geopoint'].latitude,
+              doc['position']['geopoint'].longitude),
+        ),
+        child: AvatarMarker(radius: markerSize, url: imageURL),
+      );
 
       imageMarkerData.add(imageCustomMarker);
 
@@ -206,7 +204,7 @@ class MapViewModel {
 
       imageMarkers.addAll({markerID: imageCustomMarker});
       avatarMarkers.addAll({markerID: avatarCustomMarker});
-      imageFileCache.addAll({markerID: imageFile});
+      imageURLCache.addAll({markerID: imageURL});
       avatarFileCache.addAll({markerID: avatarFile});
     }
   }
