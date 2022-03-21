@@ -6,7 +6,7 @@ abstract class UserRemoteDataSource {
     String name,
   );
   Future<User> getUser(String id);
-  Future<void> userExists();
+  Future<void> userExists(String id);
   Future<void> updateUserFavorites(String newFavorite);
   Future<void> updateUserImages(String newImageId);
   Future<void> updateUserPins(dynamic newPin);
