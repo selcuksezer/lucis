@@ -1,0 +1,1 @@
+class FeedStreamModel extends FeedStream {}

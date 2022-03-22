@@ -6,6 +6,7 @@ abstract class LocationService {
   Future<bool> serviceEnabled();
   Future<bool> requestService();
   Future<bool> hasPermission();
+  Future<bool> permissionDeniedForever();
   Future<bool> requestPermission();
 }
 
@@ -34,6 +35,14 @@ class LocationServiceImpl implements LocationService {
     final permissionStatus = await loc.Location().hasPermission();
     return permissionStatus == loc.PermissionStatus.granted ||
             permissionStatus == loc.PermissionStatus.grantedLimited
+        ? true
+        : false;
+  }
+
+  @override
+  Future<bool> permissionDeniedForever() async {
+    final permissionStatus = await loc.Location().hasPermission();
+    return permissionStatus == loc.PermissionStatus.deniedForever
         ? true
         : false;
   }

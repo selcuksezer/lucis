@@ -5,3 +5,10 @@ class Location {
 
   Location(this.geoFirePoint);
 }
+
+enum LocationStatus {
+  enabled,
+  noPermission,
+  noPermissionForever,
+  noService,
+}

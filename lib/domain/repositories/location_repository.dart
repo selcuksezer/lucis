@@ -1,7 +1,8 @@
+import 'package:dartz/dartz.dart';
 import 'package:lucis/domain/entities/location.dart';
 
 abstract class LocationRepository {
-  Future<Location?> getLocation();
+  Future<Either<LocationStatus, Location?>> getLocation();
   Future<bool> serviceEnabled();
   Future<bool> requestService();
   Future<bool> hasPermission();

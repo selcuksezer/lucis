@@ -15,7 +15,7 @@ class FeedListItem extends StatelessWidget {
       child: Column(
         children: [
           Image.network(
-            item.image.imageURL!,
+            item.image.imageId!,
             width: double.infinity,
           ),
           const SizedBox(
@@ -35,8 +35,7 @@ class FeedListItem extends StatelessWidget {
                         ? CircleAvatar(
                             radius: 20.0,
                             backgroundColor: Colors.transparent,
-                            backgroundImage:
-                                NetworkImage(item.avatar.imageURL!),
+                            backgroundImage: NetworkImage(item.avatar.imageId!),
                           )
                         : const Icon(
                             Icons.person_pin,
