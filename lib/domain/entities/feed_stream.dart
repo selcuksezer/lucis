@@ -1,5 +1,5 @@
 import 'package:lucis/domain/entities/feed.dart';
-import 'package:lucis/models/location.dart';
+import 'package:lucis/domain/entities/location.dart';
 
 class FeedStream {
   final Stream<List<Feed>> feedStream;

@@ -11,4 +11,11 @@ class LocationModel extends Location {
                 latitude,
                 longitude,
               ));
+
+  factory LocationModel.fromGeoFirePoint(GeoFirePoint geoFirePoint) {
+    return LocationModel(
+      geoFirePoint.latitude,
+      geoFirePoint.longitude,
+    );
+  }
 }
