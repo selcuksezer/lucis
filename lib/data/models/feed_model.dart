@@ -36,6 +36,17 @@ class FeedModel extends Feed {
     );
   }
 
+  factory FeedModel.fromFeed(Feed feed) {
+    return FeedModel(
+      userId: feed.userId,
+      userName: feed.userName,
+      imageId: feed.imageId,
+      location: feed.location,
+      favorites: feed.favorites,
+      pins: feed.pins,
+    );
+  }
+
   Map<String, dynamic>? toDocument() {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final position = location.geoFirePoint?.data;

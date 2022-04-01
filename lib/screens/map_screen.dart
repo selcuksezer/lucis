@@ -32,24 +32,19 @@ class _MapScreenState extends State<MapScreen> {
     _mapVM.context = context;
     return Scaffold(
       body: Stack(children: [
-        CustomGoogleMapMarkerBuilder(
-          customMarkers: _mapVM.getMarkers(),
-          builder: (BuildContext context, Set<Marker>? markers) {
-            return GoogleMap(
-              onMapCreated: _mapVM.onMapCreated,
-              onCameraIdle: _mapVM.onCameraIdle,
-              onCameraMove: _mapVM.onCameraMove,
-              markers: markers ?? {},
-              mapType: MapType.satellite,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(widget.initialLocation.geoLocation!.latitude,
-                    widget.initialLocation.geoLocation!.longitude),
-                zoom: 16,
-              ),
-            );
-          },
+        GoogleMap(
+          onMapCreated: _mapVM.onMapCreated,
+          onCameraIdle: _mapVM.onCameraIdle,
+          onCameraMove: _mapVM.onCameraMove,
+          markers: _mapVM.getMarkers(),
+          mapType: MapType.satellite,
+          myLocationEnabled: true,
+          myLocationButtonEnabled: true,
+          initialCameraPosition: CameraPosition(
+            target: LatLng(widget.initialLocation.geoLocation!.latitude,
+                widget.initialLocation.geoLocation!.longitude),
+            zoom: 16,
+          ),
         ),
         SafeArea(
           child: Align(

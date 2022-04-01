@@ -9,6 +9,11 @@ const kYouIcon = IconData(0xe803, fontFamily: 'CustomIcons');
 const kLoginButtonBackgroundColor = Colors.black54;
 const kRegisterButtonBackgroundColor = Colors.deepOrangeAccent;
 
+const kDefaultAvatarPath = 'assets/images/astronaut.png';
+const kDefaultMarkerSize = 50;
+
+const kMaxImageImportHeight = 600.0;
+
 const kTextFieldDecoration = InputDecoration(
   hintText: '',
   hintStyle: TextStyle(color: Colors.grey),

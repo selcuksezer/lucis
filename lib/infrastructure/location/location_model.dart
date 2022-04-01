@@ -1,4 +1,5 @@
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lucis/domain/entities/location.dart';
 
 class LocationModel extends Location {
@@ -17,5 +18,14 @@ class LocationModel extends Location {
       geoFirePoint.latitude,
       geoFirePoint.longitude,
     );
+  }
+
+  LatLng? toLatLng() {
+    return geoFirePoint == null
+        ? null
+        : LatLng(
+            geoFirePoint!.latitude,
+            geoFirePoint!.longitude,
+          );
   }
 }

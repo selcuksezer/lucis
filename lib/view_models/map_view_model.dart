@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_map_markers/custom_map_markers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:image/image.dart' as im;
 import 'package:lucis/models/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lucis/helpers/firebase_storage_helper.dart';
@@ -26,14 +29,14 @@ class MapViewModel {
   final Function(Function()) _updateUI;
   late BuildContext context;
   late Stream<List<DocumentSnapshot>> stream;
-  Map<MarkerId, MarkerData> imageMarkers = {};
-  Map<MarkerId, MarkerData> avatarMarkers = {};
+  Map<MarkerId, Marker> imageMarkers = {};
+  Map<MarkerId, Marker> avatarMarkers = {};
   Map<MarkerId, String> imageURLCache = {};
   Map<MarkerId, File?> avatarFileCache = {};
   MarkerType markerDisplayType = MarkerType.avatar;
   bool streamOn = false;
   late CameraPosition _lastCameraPosition;
-  List<MarkerData> imageMarkerData = [];
+  List<Marker> imageMarkerData = [];
   double markerSize = 30.0;
   double delZoomTemp = 0;
 
@@ -92,34 +95,34 @@ class MapViewModel {
   }
 
   void updateMarkers() {
-    imageMarkers.forEach((markerID, imageMarker) {
-      imageMarker.child =
-          AvatarMarker(radius: markerSize, url: imageURLCache[markerID]!);
-
-      if (avatarFileCache[markerID] != null) {
-        avatarMarkers[markerID]!.child = CircleAvatar(
-          backgroundImage: FileImage(avatarFileCache[markerID]!),
-          maxRadius: markerSize,
-        );
-      } else {
-        avatarMarkers[markerID]!.child = Icon(
-          FontAwesomeIcons.solidUser,
-          color: Colors.deepOrange,
-          size: markerSize,
-        );
-      }
-    });
+    // imageMarkers.forEach((markerID, imageMarker) {
+    //   imageMarker.child =
+    //       AvatarMarker(radius: markerSize, url: imageURLCache[markerID]!);
+    //
+    //   if (avatarFileCache[markerID] != null) {
+    //     avatarMarkers[markerID]!.child = CircleAvatar(
+    //       backgroundImage: FileImage(avatarFileCache[markerID]!),
+    //       maxRadius: markerSize,
+    //     );
+    //   } else {
+    //     avatarMarkers[markerID]!.child = Icon(
+    //       FontAwesomeIcons.solidUser,
+    //       color: Colors.deepOrange,
+    //       size: markerSize,
+    //     );
+    //   }
+    // });
   }
 
-  List<MarkerData> getMarkers() {
+  Set<Marker> getMarkers() {
     if (imageMarkers.isEmpty || avatarMarkers.isEmpty) {
       print('marker list empty');
-      return [];
+      return {};
     } else {
       print(markerDisplayType);
       return markerDisplayType == MarkerType.photo
-          ? imageMarkers.values.toList()
-          : avatarMarkers.values.toList();
+          ? imageMarkers.values.toSet()
+          : avatarMarkers.values.toSet();
     }
   }
 
@@ -164,9 +167,16 @@ class MapViewModel {
       );
 
       final markerID = MarkerId('${doc['imageID']}');
+      const url =
+          'https://firebasestorage.googleapis.com/v0/b/lucis-flutter-f8748.appspot.com/o/lukas%2Flukas-1646774917476?alt=media&token=08c3977d-864b-4ee5-9280-37c7caab79c2';
+      final data = await NetworkAssetBundle(Uri.parse(url)).load(url);
+      final image = im.decodeImage(data.buffer.asUint8List());
+      final circleImage = im.copyCropCircle(
+          im.copyResize(image!, width: 200, height: 200),
+          radius: 100);
+      final encod = im.encodePng(circleImage);
       ////////////////
-      final imageCustomMarker = MarkerData(
-        marker: Marker(
+      final imageCustomMarker = Marker(
           consumeTapEvents: true,
           onTap: () {
             onMarkerTap(markerID);
@@ -174,32 +184,18 @@ class MapViewModel {
           markerId: markerID,
           position: LatLng(doc['position']['geopoint'].latitude,
               doc['position']['geopoint'].longitude),
-        ),
-        child: AvatarMarker(radius: markerSize, url: imageURL),
-      );
+          icon: BitmapDescriptor.fromBytes(Uint8List.fromList(encod)));
 
       imageMarkerData.add(imageCustomMarker);
 
-      final avatarCustomMarker = MarkerData(
-        marker: Marker(
-          consumeTapEvents: true,
-          onTap: () {
-            onMarkerTap(markerID);
-          },
-          markerId: markerID,
-          position: LatLng(doc['position']['geopoint'].latitude,
-              doc['position']['geopoint'].longitude),
-        ),
-        child: avatarFile != null
-            ? CircleAvatar(
-                backgroundImage: FileImage(avatarFile),
-                maxRadius: initialMarkerSize,
-              )
-            : const Icon(
-                FontAwesomeIcons.solidUser,
-                color: Colors.deepOrange,
-                size: initialMarkerSize,
-              ),
+      final avatarCustomMarker = Marker(
+        consumeTapEvents: true,
+        onTap: () {
+          onMarkerTap(markerID);
+        },
+        markerId: markerID,
+        position: LatLng(doc['position']['geopoint'].latitude,
+            doc['position']['geopoint'].longitude),
       );
 
       imageMarkers.addAll({markerID: imageCustomMarker});
