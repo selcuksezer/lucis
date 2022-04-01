@@ -14,16 +14,18 @@ abstract class UserRepository {
 
   Future<Either<Failure, bool>> updateUserFavorites(
     String id,
-    String newFavorite,
-  );
+    String newFavorite, {
+    bool add,
+  });
   Future<Either<Failure, bool>> updateUserImages(
     String id,
     String newImageId,
   );
   Future<Either<Failure, bool>> updateUserPins(
     String id,
-    Location newPin,
-  );
+    Location newPin, {
+    bool add,
+  });
   Future<Either<Failure, bool>> updateUserAvatar(
     String id,
     File newAvatar,

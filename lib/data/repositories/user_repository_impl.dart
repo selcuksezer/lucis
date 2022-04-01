@@ -60,13 +60,15 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<Either<Failure, bool>> updateUserFavorites(
     String id,
-    String newFavorite,
-  ) async {
+    String newFavorite, {
+    bool add = true,
+  }) async {
     if (await _networkInfo.isConnected) {
       try {
         await _userRemoteDataSource.updateUserFavorites(
           id,
           newFavorite,
+          add: add,
         );
         return const Right(true);
       } on BadRequestException {
@@ -108,13 +110,15 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<Either<Failure, bool>> updateUserPins(
     String id,
-    Location newPin,
-  ) async {
+    Location newPin, {
+    bool add = true,
+  }) async {
     if (await _networkInfo.isConnected) {
       try {
         await _userRemoteDataSource.updateUserPins(
           id,
           newPin,
+          add: add,
         );
         return const Right(true);
       } on BadRequestException {

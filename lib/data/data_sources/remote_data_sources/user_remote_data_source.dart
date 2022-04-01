@@ -12,9 +12,17 @@ abstract class UserRemoteDataSource {
   );
   Future<UserModel> getUser(String id);
   Future<bool> userExists(String id);
-  Future<void> updateUserFavorites(String id, String newFavorite);
+  Future<void> updateUserFavorites(
+    String id,
+    String newFavorite, {
+    bool add = true,
+  });
   Future<void> updateUserImages(String id, String newImageId);
-  Future<void> updateUserPins(String id, Location newPin);
+  Future<void> updateUserPins(
+    String id,
+    Location newPin, {
+    bool add = true,
+  });
   Future<void> updateUserAvatar(String id, File newAvatar);
 }
 
@@ -72,7 +80,11 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<void> updateUserFavorites(String id, String newFavorite) async {
+  Future<void> updateUserFavorites(
+    String id,
+    String newFavorite, {
+    bool add = true,
+  }) async {
     try {
       final usersRef = FirebaseFirestore.instance.collection('users').doc(id);
       await FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -84,7 +96,11 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         if (newFavorites.contains(newFavorite)) {
           return;
         } else {
-          newFavorites.add(newFavorite);
+          if (add) {
+            newFavorites.add(newFavorite);
+          } else {
+            newFavorites.remove(newFavorite);
+          }
           transaction.update(usersRef, {'favorites': newFavorites});
         }
       });
@@ -118,7 +134,11 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<void> updateUserPins(String id, Location newPin) async {
+  Future<void> updateUserPins(
+    String id,
+    Location newPin, {
+    bool add = true,
+  }) async {
     if (newPin.geoFirePoint == null) {
       throw const BadRequestException(
           "Tried to update user pins without a valid pin!");
@@ -133,10 +153,15 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
           throw Exception("User $id does not exist!");
         }
         List<dynamic> newPins = snapshot.data()?['pins'] ?? [];
-        if (newPins.contains(newPin)) {
+        if (newPins.contains(pin)) {
           return;
         } else {
-          newPins.add(newPin);
+          if (add) {
+            newPins.add(pin);
+          } else {
+            newPins.remove(pin);
+          }
+
           transaction.update(usersRef, {'pins': newPins});
         }
       });

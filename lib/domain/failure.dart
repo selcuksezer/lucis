@@ -21,4 +21,6 @@ enum Failure {
   mailAlreadyExistsFailure,
   mailInvalidFailure,
   weakPasswordFailure,
+  // session
+  sessionNotInitializedFailure,
 }
