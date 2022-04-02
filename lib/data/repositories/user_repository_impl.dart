@@ -58,6 +58,32 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
+  Future<Either<Failure, Map<String?, List<String>>>> getUserImagePage(
+    String id, {
+    required int limit,
+    String? pageToken,
+  }) async {
+    if (await _networkInfo.isConnected) {
+      try {
+        final imagePage = await _userRemoteDataSource.getUserImagePage(
+          id,
+          limit: limit,
+          pageToken: pageToken,
+        );
+        return Right(imagePage);
+      } on BadRequestException {
+        return const Left(Failure.badRequestFailure);
+      } on ServerException {
+        return const Left(Failure.serverFailure);
+      } on UnknownException {
+        return const Left(Failure.unknownFailure);
+      }
+    } else {
+      return const Left(Failure.connectionFailure);
+    }
+  }
+
+  @override
   Future<Either<Failure, bool>> updateUserFavorites(
     String id,
     String newFavorite, {

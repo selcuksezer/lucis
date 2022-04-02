@@ -44,14 +44,37 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
           'Tried to upload the feed with no image!'));
     }
     try {
+      // update file db
       await FirebaseStorage.instance
           .ref('${feed.userId}/${feed.imageId}')
           .putFile(feed.imageFile!);
 
+      // update feed db
       await FirebaseFirestore.instance
           .collection('feed')
           .doc(feed.imageId)
           .set(feedDoc);
+
+      // update user db
+      final usersRef =
+          FirebaseFirestore.instance.collection('users').doc(feed.userId);
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final snapshot = await transaction.get(usersRef);
+        if (!snapshot.exists) {
+          throw BadRequestException("User ${feed.userId} does not exist!");
+        }
+        List<dynamic> newImages = snapshot.data()?['images'] ?? [];
+        if (newImages.contains(feed.imageId)) {
+          return;
+        } else {
+          final newLucis = snapshot.data()?['lucis'] + 1;
+          newImages.add(feed.imageId);
+          transaction
+              .update(usersRef, {'images': newImages, 'lucis': newLucis});
+        }
+      });
+    } on BadRequestException {
+      throw BadRequestException("User ${feed.userId} does not exist!");
     } on FirebaseException catch (e) {
       throw (ServerException(
           'FirebaseException. Code: ${e.code}. Message: ${e.message}. StackTrace: ${e.stackTrace}'));

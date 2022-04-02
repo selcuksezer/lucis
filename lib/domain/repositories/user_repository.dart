@@ -12,6 +12,12 @@ abstract class UserRepository {
 
   Future<Either<Failure, User>> getUser(String id);
 
+  Future<Either<Failure, Map<String?, List<String>>>> getUserImagePage(
+    String id, {
+    required int limit,
+    String? pageToken,
+  });
+
   Future<Either<Failure, bool>> updateUserFavorites(
     String id,
     String newFavorite, {

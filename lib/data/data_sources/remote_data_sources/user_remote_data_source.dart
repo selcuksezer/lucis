@@ -11,6 +11,11 @@ abstract class UserRemoteDataSource {
     String name,
   );
   Future<UserModel> getUser(String id);
+  Future<Map<String?, List<String>>> getUserImagePage(
+    String id, {
+    required int limit,
+    String? pageToken,
+  });
   Future<bool> userExists(String id);
   Future<void> updateUserFavorites(
     String id,
@@ -63,6 +68,33 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       }
     } else {
       throw (BadRequestException('User $id does not exist!'));
+    }
+  }
+
+  @override
+  Future<Map<String?, List<String>>> getUserImagePage(
+    String id, {
+    required int limit,
+    String? pageToken,
+  }) async {
+    try {
+      List<String> urls = [];
+      final listResult = await FirebaseStorage.instance.ref('$id/').list(
+            ListOptions(
+              maxResults: limit,
+              pageToken: pageToken,
+            ),
+          );
+
+      for (var ref in listResult.items) {
+        await ref.getDownloadURL().then((url) => urls.add(url));
+      }
+      return {listResult.nextPageToken: urls};
+    } on FirebaseException catch (e) {
+      throw (ServerException(
+          'FirebaseException. Code: ${e.code}. Message: ${e.message}. StackTrace: ${e.stackTrace}'));
+    } catch (e) {
+      throw (UnknownException('Unknown exception occurred! ${e.toString()}'));
     }
   }
 
