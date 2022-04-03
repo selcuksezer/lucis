@@ -1,8 +1,9 @@
 import 'package:location/location.dart' as loc;
 import 'package:lucis/infrastructure/location/location_model.dart';
+import 'exceptions.dart';
 
 abstract class LocationService {
-  Future<LocationModel?> getLocation();
+  Future<LocationModel> getLocation();
   Future<bool> serviceEnabled();
   Future<bool> requestService();
   Future<bool> hasPermission();
@@ -12,12 +13,16 @@ abstract class LocationService {
 
 class LocationServiceImpl implements LocationService {
   @override
-  Future<LocationModel?> getLocation() async {
+  Future<LocationModel> getLocation() async {
     final locationData = await loc.Location().getLocation();
-    return LocationModel(
-      locationData.latitude,
-      locationData.longitude,
-    );
+    if (locationData.latitude == null || locationData.longitude == null) {
+      throw const LocationNotRetrievedException();
+    } else {
+      return LocationModel(
+        locationData.latitude!,
+        locationData.longitude!,
+      );
+    }
   }
 
   @override

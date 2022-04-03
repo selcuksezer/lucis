@@ -22,8 +22,6 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-  _FeedScreenState() {}
-
   final PagingController<int, FeedItem> _pagingController =
       PagingController(firstPageKey: 0);
 

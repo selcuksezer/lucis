@@ -5,19 +5,20 @@ import 'package:lucis/domain/usecases/base_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:lucis/domain/failure.dart';
 
-class GetCameraImageUseCase implements BaseUseCase<File, Params> {
+class GetGalleryImageUseCase
+    implements BaseUseCase<File, GetGalleryImageParams> {
   final ImageRepository _imageRepository;
 
-  GetCameraImageUseCase(this._imageRepository);
+  GetGalleryImageUseCase(this._imageRepository);
 
   @override
-  Future<Either<Failure, File>> execute(Params params) async {
+  Future<Either<Failure, File>> execute(GetGalleryImageParams params) async {
     return await _imageRepository.getImageFromGallery();
   }
 }
 
-class Params extends Equatable {
-  const Params();
+class GetGalleryImageParams extends Equatable {
+  const GetGalleryImageParams();
 
   @override
   List<Object> get props => [];

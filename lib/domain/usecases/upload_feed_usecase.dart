@@ -7,22 +7,22 @@ import 'package:lucis/domain/usecases/base_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:lucis/domain/failure.dart';
 
-class UploadFeedUseCase implements BaseUseCase<bool, Params> {
+class UploadFeedUseCase implements BaseUseCase<bool, UploadFeedParams> {
   final FeedRepository _feedRepository;
 
   UploadFeedUseCase(this._feedRepository);
 
   @override
-  Future<Either<Failure, bool>> execute(Params params) async {
-    final session = Session();
-    if (session.user == null || session.location == null) {
+  Future<Either<Failure, bool>> execute(UploadFeedParams params) async {
+    if (params.session.user == null || params.session.location == null) {
       return const Left(Failure.sessionNotInitializedFailure);
     }
     final feed = Feed(
-      userId: session.user!.id,
-      userName: session.user!.name,
-      imageId: '${session.user!.id}-${DateTime.now().millisecondsSinceEpoch}',
-      location: session.location!,
+      userId: params.session.user!.id,
+      userName: params.session.user!.name,
+      imageId:
+          '${params.session.user!.id}-${DateTime.now().millisecondsSinceEpoch}',
+      location: params.session.location!,
       favorites: 0,
       pins: 0,
       imageFile: params.image,
@@ -32,11 +32,18 @@ class UploadFeedUseCase implements BaseUseCase<bool, Params> {
   }
 }
 
-class Params extends Equatable {
+class UploadFeedParams extends Equatable {
   final File image;
+  final Session session;
 
-  const Params(this.image);
+  const UploadFeedParams(
+    this.image,
+    this.session,
+  );
 
   @override
-  List<Object> get props => [image];
+  List<Object> get props => [
+        image,
+        session,
+      ];
 }

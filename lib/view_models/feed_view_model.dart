@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:lucis/models/feed.dart';
 import 'package:lucis/models/location.dart';
 

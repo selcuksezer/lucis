@@ -3,6 +3,7 @@ import 'package:lucis/domain/entities/location.dart';
 import 'package:lucis/domain/repositories/location_repository.dart';
 import 'package:lucis/infrastructure/location/location_service.dart';
 import 'package:lucis/domain/failure.dart';
+import 'exceptions.dart';
 
 class LocationRepositoryImpl implements LocationRepository {
   final LocationService _locationService;
@@ -10,7 +11,7 @@ class LocationRepositoryImpl implements LocationRepository {
   LocationRepositoryImpl(this._locationService);
 
   @override
-  Future<Either<Failure, Location?>> getLocation() async {
+  Future<Either<Failure, Location>> getLocation() async {
     if (!(await _locationService.hasPermission())) {
       if (!(await _locationService.requestPermission())) {
         return await _locationService.permissionDeniedForever()
@@ -23,7 +24,11 @@ class LocationRepositoryImpl implements LocationRepository {
         return const Left(Failure.locationNoServiceFailure);
       }
     }
-    return Right(await _locationService.getLocation());
+    try {
+      return Right(await _locationService.getLocation());
+    } on LocationNotRetrievedException {
+      return const Left(Failure.locationNotRetrieved);
+    }
   }
 
   @override

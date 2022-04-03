@@ -4,14 +4,12 @@ import 'package:lucis/domain/entities/location.dart';
 
 class LocationModel extends Location {
   LocationModel(
-    double? latitude,
-    double? longitude,
-  ) : super(latitude == null || longitude == null
-            ? null
-            : GeoFirePoint(
-                latitude,
-                longitude,
-              ));
+    double latitude,
+    double longitude,
+  ) : super(GeoFirePoint(
+          latitude,
+          longitude,
+        ));
 
   factory LocationModel.fromGeoFirePoint(GeoFirePoint geoFirePoint) {
     return LocationModel(
@@ -21,11 +19,9 @@ class LocationModel extends Location {
   }
 
   LatLng? toLatLng() {
-    return geoFirePoint == null
-        ? null
-        : LatLng(
-            geoFirePoint!.latitude,
-            geoFirePoint!.longitude,
-          );
+    return LatLng(
+      geoFirePoint.latitude,
+      geoFirePoint.longitude,
+    );
   }
 }

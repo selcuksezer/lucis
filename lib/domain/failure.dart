@@ -8,6 +8,7 @@ enum Failure {
   locationNoPermissionFailure,
   locationNoPermissionForeverFailure,
   locationNoServiceFailure,
+  locationNotRetrieved,
   // image
   galleryNoPermissionFailure,
   cameraNoPermissionFailure,

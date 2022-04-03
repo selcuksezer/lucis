@@ -1,51 +1,25 @@
 import 'package:dartz/dartz.dart';
 import 'package:lucis/domain/entities/session.dart';
-import 'package:lucis/domain/repositories/location_repository.dart';
-import 'package:lucis/domain/repositories/user_repository.dart';
+import 'package:lucis/domain/repositories/session_repository.dart';
 import 'package:lucis/domain/usecases/base_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:lucis/domain/failure.dart';
 
-class InitSessionUseCase implements BaseUseCase<Session, Params> {
-  final LocationRepository _locationRepository;
-  final UserRepository _userRepository;
+class InitSessionUseCase implements BaseUseCase<Session, InitSessionParams> {
+  final SessionRepository _sessionRepository;
 
-  InitSessionUseCase(
-    this._locationRepository,
-    this._userRepository,
-  );
+  InitSessionUseCase(this._sessionRepository);
 
   @override
-  Future<Either<Failure, Session>> execute(Params params) async {
-    final session = Session();
-    final userResult = await _userRepository.getUser(params.userId);
-
-    if (userResult.isLeft()) {
-      return Left(userResult as Failure);
-    } else {
-      userResult.fold(
-        (failure) => null,
-        (user) => session.updateUser(user),
-      );
-    }
-    final locationResult = await _locationRepository.getLocation();
-
-    if (locationResult.isLeft()) {
-      return Left(locationResult as Failure);
-    } else {
-      locationResult.fold(
-        (failure) => null,
-        (location) => session.updateLocation(location),
-      );
-    }
-    return Right(session);
+  Future<Either<Failure, Session>> execute(InitSessionParams params) async {
+    return await _sessionRepository.initSession(params.userId);
   }
 }
 
-class Params extends Equatable {
+class InitSessionParams extends Equatable {
   final String userId;
 
-  const Params({
+  const InitSessionParams({
     required this.userId,
   });
 
