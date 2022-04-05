@@ -45,7 +45,7 @@ class ImageUploadViewModel extends BaseViewModel {
   }
 
   @override
-  Future<void> handleFailure(Failure failure) async {
+  Future<void> handleFailure() async {
     switch (failure) {
       case Failure.connectionFailure:
         {

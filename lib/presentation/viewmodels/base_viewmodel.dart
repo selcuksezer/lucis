@@ -6,8 +6,11 @@ abstract class BaseViewModel with ChangeNotifier {
 
   Status _status = Status.busy;
   Failure? _failure;
+  Message _message = Message();
+
   Status get status => _status;
   Failure? get failure => _failure;
+  Message get message => _message;
 
   void updateStatus(Status status) {
     if (_status != status) {
@@ -16,13 +19,18 @@ abstract class BaseViewModel with ChangeNotifier {
     }
   }
 
+  set updateMessage(Message message) => _message = message;
+
   void onFailure(Failure failure) {
-    handleFailure(failure);
-    failure = failure;
+    _failure = failure;
+    failureToMessage();
+    handleFailure();
     updateStatus(Status.failure);
   }
 
-  Future<void> handleFailure(Failure failure);
+  Future<void> handleFailure();
+
+  void failureToMessage();
 
   @override
   @mustCallSuper
@@ -33,4 +41,20 @@ enum Status {
   ready,
   busy,
   failure,
+}
+
+class Message {
+  String? description;
+  String? title;
+  String? firstOption;
+  String? secondOption;
+  bool? showDialog = false;
+
+  Message({
+    this.description,
+    this.title,
+    this.firstOption,
+    this.secondOption,
+    this.showDialog,
+  });
 }

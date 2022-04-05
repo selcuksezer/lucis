@@ -46,7 +46,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   @override
-  Future<void> handleFailure(Failure failure) async {
+  Future<void> handleFailure() async {
     switch (failure) {
       case Failure.locationNotRetrieved:
         {
@@ -58,4 +58,7 @@ class HomeViewModel extends BaseViewModel {
         break;
     }
   }
+
+  @override
+  String failureToMessage();
 }

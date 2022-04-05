@@ -30,3 +30,5 @@ const kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(32.0)),
   ),
 );
+
+const kDefaultFailureMessage = 'Something went wrong!';
