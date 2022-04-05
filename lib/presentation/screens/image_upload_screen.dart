@@ -60,7 +60,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                  Navigator.of(context).popUntil(ModalRoute.withName('/home'));
                 },
                 icon: const Icon(
                   Icons.clear,

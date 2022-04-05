@@ -130,7 +130,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         if (viewModel.status == Status.ready) {
                           await Navigator.pushNamed(
                             context,
-                            '/splash-screen',
+                            '/splash',
                           );
                         }
                       }

@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (viewModel.status == Status.ready) {
                           await Navigator.pushNamed(
                             context,
-                            '/splash-screen',
+                            '/splash',
                           );
                         }
                       }
