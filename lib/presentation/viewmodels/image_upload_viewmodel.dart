@@ -50,10 +50,33 @@ class ImageUploadViewModel extends BaseViewModel {
       case Failure.connectionFailure:
         {
           // TODO: listen and wait until connection is back on
-          updateStatus(Status.ready);
         }
         break;
       default:
+        break;
+    }
+  }
+
+  @override
+  void failureToMessage() {
+    switch (failure) {
+      case Failure.connectionFailure:
+        {
+          updateMessage = Message(
+              title: 'Network Connection Error',
+              description: 'Could not connect to the internet.',
+              showDialog: true,
+              firstOption: 'OK');
+        }
+        break;
+      default:
+        {
+          updateMessage = Message(
+              title: 'Error',
+              description: 'Something went wrong!',
+              showDialog: true,
+              firstOption: 'OK');
+        }
         break;
     }
   }

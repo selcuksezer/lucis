@@ -2,18 +2,13 @@ import 'dart:io';
 import 'package:lucis/domain/usecases/get_camera_image_usecase.dart';
 import 'package:lucis/domain/usecases/get_gallery_image_usecase.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
-import 'package:lucis/domain/usecases/get_session_usecase.dart';
-import 'package:lucis/domain/entities/session.dart';
 import 'package:lucis/domain/failure.dart';
 
 class ImageImportViewModel extends BaseViewModel {
   final GetCameraImageUseCase _getCameraImageUseCase;
   final GetGalleryImageUseCase _getGalleryImageUseCase;
-  final GetSessionUseCase _getSessionUseCase;
-  late Session _session;
 
   ImageImportViewModel(
-    this._getSessionUseCase,
     this._getCameraImageUseCase,
     this._getGalleryImageUseCase,
   );
@@ -21,20 +16,6 @@ class ImageImportViewModel extends BaseViewModel {
   @override
   void init() {
     updateStatus(Status.ready);
-  }
-
-  Future<void> _fetchSession() async {
-    final sessionOrFailure =
-        await _getSessionUseCase.execute(const GetSessionParams());
-    sessionOrFailure.fold(
-      (failure) => onFailure(failure),
-      (session) {
-        _session = session;
-        _session.location == null
-            ? updateStatus(Status.failure)
-            : updateStatus(Status.ready);
-      },
-    );
   }
 
   Future<File?> takePhoto() async {
@@ -62,19 +43,43 @@ class ImageImportViewModel extends BaseViewModel {
   @override
   Future<void> handleFailure() async {
     switch (failure) {
+      default:
+        break;
+    }
+  }
+
+  @override
+  void failureToMessage() {
+    switch (failure) {
       case Failure.cameraNoPermissionFailure:
         {
-          // TODO: prompt user to give camera access
-          updateStatus(Status.ready);
+          updateMessage = Message(
+              title: 'Camera Error',
+              description:
+                  'Cannot access to the camera. Please give access permission.',
+              showDialog: true,
+              firstOption: 'OK');
         }
         break;
       case Failure.galleryNoPermissionFailure:
         {
-          // TODO: prompt user to give camera access
-          updateStatus(Status.ready);
+          updateMessage = Message(
+            title: 'Gallery Error',
+            description:
+                'Cannot access to the gallery. Please give access permission.',
+            showDialog: true,
+            firstOption: 'OK',
+          );
         }
         break;
       default:
+        {
+          updateMessage = Message(
+              title: 'Error',
+              description: 'Something went wrong!',
+              showDialog: true,
+              firstOption: 'OK');
+        }
         break;
     }
   }

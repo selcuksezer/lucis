@@ -20,6 +20,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> _fetchSession() async {
+    updateStatus(Status.busy);
     final sessionOrFailure =
         await _getSessionUseCase.execute(const GetSessionParams());
     sessionOrFailure.fold(
@@ -48,7 +49,19 @@ class HomeViewModel extends BaseViewModel {
   @override
   Future<void> handleFailure() async {
     switch (failure) {
-      case Failure.locationNotRetrieved:
+      case Failure.locationNoPermissionFailure:
+        {
+          // TODO: listen location permission/service availability
+          await _fetchLocation();
+        }
+        break;
+      case Failure.locationNoPermissionForeverFailure:
+        {
+          // TODO: listen location permission/service availability
+          await _fetchLocation();
+        }
+        break;
+      case Failure.locationNoServiceFailure:
         {
           // TODO: listen location permission/service availability
           await _fetchLocation();
@@ -60,5 +73,49 @@ class HomeViewModel extends BaseViewModel {
   }
 
   @override
-  String failureToMessage();
+  void failureToMessage() {
+    switch (failure) {
+      case Failure.locationNoPermissionFailure:
+        {
+          updateMessage = Message(
+              title: 'Location Error',
+              description:
+                  'Unable to get the location. Please give permission to location access.',
+              showDialog: true,
+              firstOption: 'OK');
+        }
+        break;
+      case Failure.locationNoPermissionForeverFailure:
+        {
+          updateMessage = Message(
+            title: 'Location Error',
+            description:
+                'Location permission is disabled forever. Please allow location use from settings.',
+            showDialog: true,
+            firstOption: 'OK',
+          );
+        }
+        break;
+      case Failure.locationNoServiceFailure:
+        {
+          updateMessage = Message(
+            title: 'Location Error',
+            description:
+                'Unable to get the location. Please enable location services.',
+            showDialog: true,
+            firstOption: 'OK',
+          );
+        }
+        break;
+      default:
+        {
+          updateMessage = Message(
+              title: 'Error',
+              description: 'Something went wrong!',
+              showDialog: true,
+              firstOption: 'OK');
+        }
+        break;
+    }
+  }
 }
