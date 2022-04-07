@@ -59,7 +59,16 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
             .where('userID', isEqualTo: id)
             .get();
         final userDoc = userQueryData.docs.first.data();
-        return UserModel.fromDocument(userDoc);
+        final userModel = UserModel.fromDocument(userDoc);
+        String? avatarUrl;
+        try {
+          avatarUrl = await FirebaseStorage.instance
+              .ref('$id/$id-avatar')
+              .getDownloadURL();
+        } finally {
+          userModel.avatarUrl = avatarUrl;
+        }
+        return userModel;
       } on FirebaseException catch (e) {
         throw (ServerException(
             'FirebaseException. Code: ${e.code}. Message: ${e.message}. StackTrace: ${e.stackTrace}'));
@@ -171,11 +180,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     Location newPin, {
     bool add = true,
   }) async {
-    if (newPin.geoFirePoint == null) {
-      throw const BadRequestException(
-          "Tried to update user pins without a valid pin!");
-    }
-    final pin = newPin.geoFirePoint!.geoPoint;
+    final pin = newPin.geoFirePoint.geoPoint;
 
     try {
       final usersRef = FirebaseFirestore.instance.collection('users').doc(id);

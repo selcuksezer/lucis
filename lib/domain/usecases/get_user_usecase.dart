@@ -5,21 +5,21 @@ import 'package:lucis/domain/usecases/base_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:lucis/domain/failure.dart';
 
-class GetUserUseCase implements BaseUseCase<User, Params> {
+class GetUserUseCase implements BaseUseCase<User, GetUserParams> {
   final UserRepository _userRepository;
 
   GetUserUseCase(this._userRepository);
 
   @override
-  Future<Either<Failure, User>> execute(Params params) async {
+  Future<Either<Failure, User>> execute(GetUserParams params) async {
     return await _userRepository.getUser(params.id);
   }
 }
 
-class Params extends Equatable {
+class GetUserParams extends Equatable {
   final String id;
 
-  const Params(this.id);
+  const GetUserParams(this.id);
 
   @override
   List<Object> get props => [id];

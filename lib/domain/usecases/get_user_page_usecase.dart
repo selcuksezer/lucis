@@ -5,14 +5,14 @@ import 'package:equatable/equatable.dart';
 import 'package:lucis/domain/failure.dart';
 
 class GetUserPageUseCase
-    implements BaseUseCase<Map<String?, List<String>>, Params> {
+    implements BaseUseCase<Map<String?, List<String>>, GetUserPageParams> {
   final UserRepository _userRepository;
 
   GetUserPageUseCase(this._userRepository);
 
   @override
   Future<Either<Failure, Map<String?, List<String>>>> execute(
-      Params params) async {
+      GetUserPageParams params) async {
     return await _userRepository.getUserImagePage(
       params.id,
       limit: params.limit,
@@ -21,12 +21,12 @@ class GetUserPageUseCase
   }
 }
 
-class Params extends Equatable {
+class GetUserPageParams extends Equatable {
   final String id;
   final int limit;
   final String? pageToken;
 
-  const Params(
+  const GetUserPageParams(
     this.id,
     this.limit,
     this.pageToken,

@@ -3,8 +3,8 @@ import 'package:lucis/presentation/screens/base_screen.dart';
 import 'dart:io';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
 import 'package:lucis/presentation/viewmodels/image_upload_viewmodel.dart';
-import 'package:lucis/widgets/show_dialog.dart';
-import 'package:lucis/domain/failure.dart';
+import 'package:lucis/presentation/components/show_dialog.dart';
+import 'package:lucis/presentation/routes.dart';
 
 class ImageUploadScreen extends StatefulWidget {
   final File image;
@@ -60,7 +60,9 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.of(context).popUntil(ModalRoute.withName('/home'));
+                  Navigator.of(context).popUntil(ModalRoute.withName(
+                    Routes.homeScreen,
+                  ));
                 },
                 icon: const Icon(
                   Icons.clear,
@@ -86,13 +88,9 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
                 ),
               ),
             if (viewModel.status == Status.failure)
-              viewModel.failure == Failure.connectionFailure
-                  ? const ShowDialog(
-                      title: 'Failed to Upload',
-                      description: 'Check your network connection.')
-                  : const ShowDialog(
-                      title: 'Failed to Upload',
-                      description: 'Check your network connection.'),
+              ShowDialog(
+                  title: viewModel.message.title!,
+                  description: 'Check your network connection.')
           ],
         ),
       ),

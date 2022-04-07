@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lucis/presentation/screens/base_screen.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
 import 'package:lucis/presentation/viewmodels/splash_viewmodel.dart';
+import 'package:lucis/presentation/routes.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({
@@ -17,7 +18,10 @@ class SplashScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (viewModel.status == Status.ready) {
-              Navigator.pushNamed(context, '/home');
+              Navigator.pushNamed(
+                context,
+                Routes.homeScreen,
+              );
             } else if (viewModel.status == Status.failure) {
               Navigator.pop(context);
             }

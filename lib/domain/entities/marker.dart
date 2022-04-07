@@ -1,10 +1,12 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image/image.dart';
+import 'package:lucis/domain/entities/feed.dart';
 import 'package:lucis/utils/extensions/image_extension.dart';
 import 'package:lucis/constants.dart';
 
 class ImageMarker {
   static const int size = kDefaultMarkerSize;
+  final Feed feed;
   final MarkerId markerId;
   final LatLng position;
   final Image image;
@@ -13,20 +15,13 @@ class ImageMarker {
   final void Function(String markerId) onMarkerTap;
 
   ImageMarker({
+    required this.feed,
     required this.markerId,
     required this.position,
     required this.image,
     required this.onMarkerTap,
-    Image? avatarPhoto,
-  }) {
-    if (avatarPhoto == null) {
-      MarkerUtils.imageFromAsset(kDefaultAvatarPath)
-          .then((defaultAvatar) => avatar = defaultAvatar);
-      // TODO: get defaultAvatarImage from getit
-    } else {
-      avatar = avatarPhoto;
-    }
-  }
+    this.avatar,
+  });
 
   Marker get photoMarker {
     return Marker(

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lucis/constants.dart';
 import 'package:lucis/presentation/screens/base_screen.dart';
 import 'package:lucis/presentation/viewmodels/home_viewmodel.dart';
-import 'package:lucis/widgets/vertical_icon_button.dart';
+import 'package:lucis/presentation/components/vertical_icon_button.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
+import 'package:lucis/presentation/routes.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -36,7 +37,7 @@ class HomeScreen extends StatelessWidget {
                               if (viewModel.status == Status.ready) {
                                 Navigator.pushNamed(
                                   context,
-                                  '/image-import',
+                                  Routes.imageImportScreen,
                                 );
                               } else if (viewModel.status == Status.failure) {
                                 //TODO: show location dialog
@@ -46,10 +47,15 @@ class HomeScreen extends StatelessWidget {
                           ),
                           VerticalIconButton(
                             icon: kYouIcon,
-                            onPressed: () => Navigator.pushNamed(
-                              context,
-                              '/user',
-                            ),
+                            onPressed: () {
+                              if (viewModel.status == Status.ready) {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.userScreen,
+                                  arguments: viewModel.userId,
+                                );
+                              }
+                            },
                             label: 'YOU',
                           ),
                         ],
@@ -63,7 +69,7 @@ class HomeScreen extends StatelessWidget {
                               if (viewModel.status == Status.ready) {
                                 Navigator.pushNamed(
                                   context,
-                                  '/feed',
+                                  Routes.feedScreen,
                                 );
                               } else if (viewModel.status == Status.failure) {
                                 //TODO: show location dialog
@@ -77,7 +83,7 @@ class HomeScreen extends StatelessWidget {
                               if (viewModel.status == Status.ready) {
                                 Navigator.pushNamed(
                                   context,
-                                  '/map',
+                                  Routes.mapScreen,
                                 );
                               } else if (viewModel.status == Status.failure) {
                                 //TODO: show location dialog

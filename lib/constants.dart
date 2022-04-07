@@ -33,3 +33,7 @@ const kTextFieldDecoration = InputDecoration(
 
 const kFeedPageSize = 10;
 const kDefaultFeedRadius = 1000.0; //km
+
+const kUserPageSize = 12;
+
+const kMapUpdateRange = 5.0; //km

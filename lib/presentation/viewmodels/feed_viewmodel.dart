@@ -66,9 +66,7 @@ class FeedViewModel extends BaseViewModel {
       updateStatus(Status.ready);
       return;
     } else {
-      for (var feedItem in feedItems) {
-        _feedList.add(feedItem);
-      }
+      _feedList.addAll(feedItems);
       _pagingController.addPageRequestListener(_fetchFeedPage);
       updateStatus(Status.ready);
     }

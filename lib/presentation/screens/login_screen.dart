@@ -3,9 +3,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lucis/constants.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
 import 'package:lucis/presentation/viewmodels/login_viewmodel.dart';
-import 'package:lucis/widgets/rounded_button.dart';
+import 'package:lucis/presentation/components/rounded_button.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:lucis/presentation/screens/base_screen.dart';
+import 'package:lucis/presentation/routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -95,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (viewModel.status == Status.ready) {
                           await Navigator.pushNamed(
                             context,
-                            '/splash',
+                            Routes.splashScreen,
                           );
                         }
                       }

@@ -10,6 +10,7 @@ import 'package:dartz/dartz.dart';
 import 'package:lucis/domain/failure.dart';
 import 'package:lucis/infrastructure/network/network_info.dart';
 import 'package:lucis/data/exceptions.dart';
+import 'package:lucis/constants.dart';
 
 class MarkerRepositoryImpl extends MarkerRepository {
   final FeedRemoteDataSource _feedDataSource;
@@ -32,25 +33,28 @@ class MarkerRepositoryImpl extends MarkerRepository {
         final markerStream = feedStream.feedStream.asyncMap((feedList) async {
           final markerList = <ImageMarker>[];
           await Future.forEach<Feed>(feedList, (feed) async {
-            if (feed.location.geoFirePoint != null || feed.imageUrl != null) {
+            if (feed.imageUrl != null) {
               final image = await MarkerUtils.imageFromNetwork(feed.imageUrl!);
               Image? avatar;
 
               if (feed.avatar != null) {
                 avatar = await MarkerUtils.imageFromNetwork(feed.avatar!);
+              } else {
+                avatar = await MarkerUtils.imageFromAsset(kDefaultAvatarPath);
               }
 
               if (image != null) {
                 markerList.add(
                   ImageMarker(
+                    feed: feed,
                     markerId: MarkerId(feed.imageId),
                     position: LatLng(
-                      feed.location.geoFirePoint!.latitude,
-                      feed.location.geoFirePoint!.longitude,
+                      feed.location.geoFirePoint.latitude,
+                      feed.location.geoFirePoint.longitude,
                     ),
                     image: image,
                     onMarkerTap: onTap,
-                    avatarPhoto: avatar,
+                    avatar: avatar,
                   ),
                 );
               }
@@ -59,6 +63,57 @@ class MarkerRepositoryImpl extends MarkerRepository {
           return markerList;
         });
         return Right(markerStream);
+      } on ServerException {
+        return const Left(Failure.serverFailure);
+      } on UnknownException {
+        return const Left(Failure.unknownFailure);
+      }
+    } else {
+      return const Left(Failure.connectionFailure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ImageMarker>>> getMarkers({
+    required GeoFirePoint center,
+    required double radius,
+    required void Function(String markerId) onTap,
+  }) async {
+    if (await _networkInfo.isConnected) {
+      try {
+        final feedStream = await _feedDataSource.getFeedWithin(center, radius);
+        final markerList = <ImageMarker>[];
+        await for (var feedList in feedStream.feedStream) {
+          for (var feed in feedList) {
+            if (feed.imageUrl != null) {
+              final image = await MarkerUtils.imageFromNetwork(feed.imageUrl!);
+              Image? avatar;
+
+              if (feed.avatar != null) {
+                avatar = await MarkerUtils.imageFromNetwork(feed.avatar!);
+              } else {
+                avatar = await MarkerUtils.imageFromAsset(kDefaultAvatarPath);
+              }
+
+              if (image != null) {
+                markerList.add(
+                  ImageMarker(
+                    feed: feed,
+                    markerId: MarkerId(feed.imageId),
+                    position: LatLng(
+                      feed.location.geoFirePoint.latitude,
+                      feed.location.geoFirePoint.longitude,
+                    ),
+                    image: image,
+                    onMarkerTap: onTap,
+                    avatar: avatar,
+                  ),
+                );
+              }
+            }
+          }
+        }
+        return Right(markerList);
       } on ServerException {
         return const Left(Failure.serverFailure);
       } on UnknownException {

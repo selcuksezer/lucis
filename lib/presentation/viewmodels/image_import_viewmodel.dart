@@ -3,6 +3,7 @@ import 'package:lucis/domain/usecases/get_camera_image_usecase.dart';
 import 'package:lucis/domain/usecases/get_gallery_image_usecase.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
 import 'package:lucis/domain/failure.dart';
+import 'package:lucis/presentation/routes.dart';
 
 class ImageImportViewModel extends BaseViewModel {
   final GetCameraImageUseCase _getCameraImageUseCase;

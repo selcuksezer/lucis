@@ -7,25 +7,28 @@ import 'package:equatable/equatable.dart';
 import 'package:lucis/domain/failure.dart';
 
 class GetMarkerUseCase
-    implements BaseUseCase<Stream<List<ImageMarker>>, Params> {
+    implements BaseUseCase<List<ImageMarker>, GetMarkerParams> {
   final MarkerRepository _markerRepository;
 
   GetMarkerUseCase(this._markerRepository);
 
   @override
-  Future<Either<Failure, Stream<List<ImageMarker>>>> execute(
-      Params params) async {
-    return await _markerRepository.getMarkerStream(
-        center: params.center, radius: params.radius, onTap: params.onTap);
+  Future<Either<Failure, List<ImageMarker>>> execute(
+      GetMarkerParams params) async {
+    return await _markerRepository.getMarkers(
+      center: params.center,
+      radius: params.radius,
+      onTap: params.onTap,
+    );
   }
 }
 
-class Params extends Equatable {
+class GetMarkerParams extends Equatable {
   final GeoFirePoint center;
   final double radius;
   final void Function(String markerId) onTap;
 
-  const Params(
+  const GetMarkerParams(
     this.center,
     this.radius,
     this.onTap,

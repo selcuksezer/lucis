@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucis/presentation/screens/base_screen.dart';
 import 'package:lucis/presentation/viewmodels/image_import_viewmodel.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
+import 'package:lucis/presentation/routes.dart';
 
 class ImageImportScreen extends StatelessWidget {
   static const route = 'image-import';
@@ -29,12 +30,10 @@ class ImageImportScreen extends StatelessWidget {
                     if (image != null) {
                       Navigator.pushNamed(
                         context,
-                        '/image-import',
+                        Routes.imageImportScreen,
                         arguments: image,
                       );
                     }
-                  } else if (viewModel.status == Status.failure) {
-                    //TODO: ask for camera permission
                   }
                 },
                 child: Column(
@@ -70,12 +69,10 @@ class ImageImportScreen extends StatelessWidget {
                     if (image != null) {
                       Navigator.pushNamed(
                         context,
-                        '/image-import',
+                        Routes.imageImportScreen,
                         arguments: image,
                       );
                     }
-                  } else if (viewModel.status == Status.failure) {
-                    //TODO: ask for gallery permission
                   }
                 },
                 child: Column(

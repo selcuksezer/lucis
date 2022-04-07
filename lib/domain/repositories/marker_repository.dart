@@ -9,4 +9,10 @@ abstract class MarkerRepository {
     required double radius,
     required void Function(String markerId) onTap,
   });
+
+  Future<Either<Failure, List<ImageMarker>>> getMarkers({
+    required GeoFirePoint center,
+    required double radius,
+    required void Function(String markerId) onTap,
+  });
 }

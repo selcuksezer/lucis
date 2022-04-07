@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:lucis/domain/entities/location.dart';
 
 class Feed {

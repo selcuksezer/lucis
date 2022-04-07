@@ -19,6 +19,8 @@ class HomeViewModel extends BaseViewModel {
     _fetchSession();
   }
 
+  get userId => _session.user?.id;
+
   Future<void> _fetchSession() async {
     updateStatus(Status.busy);
     final sessionOrFailure =

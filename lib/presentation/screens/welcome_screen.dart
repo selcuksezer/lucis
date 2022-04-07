@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
-import 'registration_screen.dart';
-import 'package:lucis/widgets/rounded_button.dart';
+import 'package:lucis/presentation/components/rounded_button.dart';
 import 'package:lucis/constants.dart';
+import 'package:lucis/presentation/routes.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  static const route = 'welcome-screen';
-
   const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -37,14 +34,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               color: kLoginButtonBackgroundColor,
               text: 'Log In',
               onPressed: () {
-                Navigator.pushNamed(context, LoginScreen.route);
+                Navigator.pushNamed(
+                  context,
+                  Routes.loginScreen,
+                );
               },
             ),
             RoundedButton(
               color: kRegisterButtonBackgroundColor,
               text: 'Register',
               onPressed: () {
-                Navigator.pushNamed(context, RegistrationScreen.route);
+                Navigator.pushNamed(
+                  context,
+                  Routes.registrationScreen,
+                );
               },
             ),
           ],

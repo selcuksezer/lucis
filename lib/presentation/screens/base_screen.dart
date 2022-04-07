@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
-import 'package:lucis/injection.dart';
+import 'package:lucis/injection_container.dart';
 
 class BaseScreen<T extends BaseViewModel> extends StatefulWidget {
   final Widget Function(
@@ -20,7 +20,7 @@ class BaseScreen<T extends BaseViewModel> extends StatefulWidget {
 }
 
 class _BaseScreenState<T extends BaseViewModel> extends State<BaseScreen<T>> {
-  T viewModel = locator<T>();
+  T viewModel = sl<T>();
 
   @override
   void initState() {
