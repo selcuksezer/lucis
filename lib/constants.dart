@@ -31,4 +31,5 @@ const kTextFieldDecoration = InputDecoration(
   ),
 );
 
-const kDefaultFailureMessage = 'Something went wrong!';
+const kFeedPageSize = 10;
+const kDefaultFeedRadius = 1000.0; //km

@@ -6,13 +6,13 @@ import 'package:lucis/domain/usecases/base_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:lucis/domain/failure.dart';
 
-class GetFeedUseCase implements BaseUseCase<FeedStream, Params> {
+class GetFeedUseCase implements BaseUseCase<FeedStream, GetFeedParams> {
   final FeedRepository _feedRepository;
 
   GetFeedUseCase(this._feedRepository);
 
   @override
-  Future<Either<Failure, FeedStream>> execute(Params params) async {
+  Future<Either<Failure, FeedStream>> execute(GetFeedParams params) async {
     return await _feedRepository.getFeedWithin(
       params.center,
       params.radius,
@@ -20,14 +20,14 @@ class GetFeedUseCase implements BaseUseCase<FeedStream, Params> {
   }
 }
 
-class Params extends Equatable {
+class GetFeedParams extends Equatable {
   final GeoFirePoint center;
   final double radius;
 
-  const Params(
-    this.center,
-    this.radius,
-  );
+  const GetFeedParams(
+    this.center, {
+    required this.radius,
+  });
 
   @override
   List<Object> get props => [
