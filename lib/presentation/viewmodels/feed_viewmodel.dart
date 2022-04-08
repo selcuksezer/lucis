@@ -36,9 +36,9 @@ class FeedViewModel extends BaseViewModel {
         await _getSessionUseCase.execute(const GetSessionParams());
     sessionOrFailure.fold(
       (failure) => onFailure(failure),
-      (session) {
+      (session) async {
         _session = session;
-        _fetchFeedWithin();
+        await _fetchFeedWithin();
       },
     );
   }
@@ -54,7 +54,6 @@ class FeedViewModel extends BaseViewModel {
     feedOrFailure.fold(
       (failure) => onFailure(failure),
       (feed) {
-        updateStatus(Status.busy);
         _feed = feed;
         _feed.feedStream.listen(_addNewFeedItems);
       },
@@ -67,12 +66,14 @@ class FeedViewModel extends BaseViewModel {
       return;
     } else {
       _feedList.addAll(feedItems);
-      _pagingController.addPageRequestListener(_fetchFeedPage);
+      print(_feedList);
       updateStatus(Status.ready);
+      _pagingController.addPageRequestListener(fetchFeedPage);
+      _pagingController.notifyListeners();
     }
   }
 
-  void _fetchFeedPage(int pageKey) {
+  void fetchFeedPage(int pageKey) {
     if (status == Status.ready) {
       final startIdx = kFeedPageSize * pageKey;
       final nextStartIdx = startIdx + kFeedPageSize;

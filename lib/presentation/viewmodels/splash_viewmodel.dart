@@ -15,10 +15,11 @@ class SplashViewModel extends BaseViewModel {
   );
 
   @override
-  void init() {}
+  void init() {
+    initSession();
+  }
 
   Future<void> initSession() async {
-    updateStatus(Status.busy);
     final sessionOrFailure =
         await _getSessionUseCase.execute(const GetSessionParams());
     sessionOrFailure.fold(

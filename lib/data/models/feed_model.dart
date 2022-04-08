@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:lucis/domain/entities/feed.dart';
 import 'package:lucis/domain/entities/location.dart';
 
@@ -30,7 +32,10 @@ class FeedModel extends Feed {
       userId: doc['userID'],
       userName: doc['userName'],
       imageId: doc['imageID'],
-      location: Location(doc['position']),
+      location: Location(GeoFirePoint(
+        doc['position']['geopoint'].latitude,
+        doc['position']['geopoint'].longitude,
+      )),
       favorites: doc['favorites'],
       pins: doc['pins'],
     );
@@ -49,7 +54,7 @@ class FeedModel extends Feed {
 
   Map<String, dynamic>? toDocument() {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final position = location.geoFirePoint?.data;
+    final position = location.geoFirePoint.data;
     return position == null
         ? null
         : {

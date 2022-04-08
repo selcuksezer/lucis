@@ -25,6 +25,7 @@ class UserViewModel extends BaseViewModel {
   get avatar => _user?.avatarUrl;
   get lucis => _user?.lucis;
   get name => _user?.name;
+  get id => _id;
 
   @override
   void init() {}
@@ -37,12 +38,15 @@ class UserViewModel extends BaseViewModel {
       (failure) => onFailure(failure),
       (user) {
         _user = user;
+        updateStatus(Status.ready);
         _pagingController.addPageRequestListener(_fetchUserPage);
+        _pagingController.notifyListeners();
       },
     );
   }
 
   Future<void> _fetchUserPage(int pageKey) async {
+    print('user fetch page called');
     final feedOrFailure = await _getUserPageUseCase.execute(GetUserPageParams(
       _id!,
       kUserPageSize,
@@ -51,7 +55,8 @@ class UserViewModel extends BaseViewModel {
     feedOrFailure.fold(
       (failure) => onFailure(failure),
       (userPage) {
-        updateStatus(Status.busy);
+        print('user fetch page success');
+
         pageToken = userPage.keys.first;
         final newItems = userPage.values.first;
         final nextPageKey = newItems.isEmpty ? null : pageKey + 1;

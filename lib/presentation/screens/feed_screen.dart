@@ -4,6 +4,8 @@ import 'package:lucis/presentation/screens/base_screen.dart';
 import 'package:lucis/presentation/viewmodels/feed_viewmodel.dart';
 import 'package:lucis/presentation/components/feed_list_item.dart';
 
+import '../viewmodels/base_viewmodel.dart';
+
 class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
 

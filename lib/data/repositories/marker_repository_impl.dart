@@ -34,13 +34,22 @@ class MarkerRepositoryImpl extends MarkerRepository {
           final markerList = <ImageMarker>[];
           await Future.forEach<Feed>(feedList, (feed) async {
             if (feed.imageUrl != null) {
-              final image = await MarkerUtils.imageFromNetwork(feed.imageUrl!);
+              final imageRect =
+                  await MarkerUtils.imageFromNetwork(feed.imageUrl!);
+              final image =
+                  imageRect?.circularCropResize(radius: kDefaultMarkerSize);
               Image? avatar;
 
               if (feed.avatar != null) {
-                avatar = await MarkerUtils.imageFromNetwork(feed.avatar!);
+                final avatarRect =
+                    await MarkerUtils.imageFromNetwork(feed.avatar!);
+                avatar =
+                    avatarRect?.circularCropResize(radius: kDefaultMarkerSize);
               } else {
-                avatar = await MarkerUtils.imageFromAsset(kDefaultAvatarPath);
+                final avatarRect =
+                    await MarkerUtils.imageFromAsset(kDefaultAvatarPath);
+                avatar =
+                    avatarRect?.circularCropResize(radius: kDefaultMarkerSize);
               }
 
               if (image != null) {
@@ -82,6 +91,7 @@ class MarkerRepositoryImpl extends MarkerRepository {
     if (await _networkInfo.isConnected) {
       try {
         final feedStream = await _feedDataSource.getFeedWithin(center, radius);
+
         final markerList = <ImageMarker>[];
         await for (var feedList in feedStream.feedStream) {
           for (var feed in feedList) {

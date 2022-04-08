@@ -26,7 +26,11 @@ class UserModel extends User {
     return UserModel(
       id: doc['userID'],
       name: doc['userName'],
-      imageIds: doc['images'] ?? <String>[],
+      imageIds: doc['images'] == null
+          ? <String>[]
+          : List<String>.from(
+              doc['images'],
+            ),
       lucis: doc['lucis'],
       favorites: doc['favorites'] ?? <String>[],
       pins: doc['pins'] ?? <Location>[],

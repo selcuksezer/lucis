@@ -13,35 +13,29 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseScreen<SplashViewModel>(
-      builder: (context, viewModel, child) => FutureBuilder(
-        future: viewModel.initSession(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (viewModel.status == Status.ready) {
-              Navigator.pushNamed(
-                context,
-                Routes.homeScreen,
-              );
-            } else if (viewModel.status == Status.failure) {
-              Navigator.pop(context);
-            }
-            return Container(
-              color: Colors.white,
-              constraints: const BoxConstraints.expand(),
+      builder: (context, viewModel, child) {
+        if (viewModel.status == Status.ready) {
+          WidgetsBinding.instance?.addPostFrameCallback((_) {
+            Navigator.pushNamed(
+              context,
+              Routes.homeScreen,
             );
-          } else {
-            return Container(
-              color: Colors.white,
-              constraints: const BoxConstraints.expand(),
-              child: const Center(
-                child: SpinKitDoubleBounce(
-                  color: Colors.black54,
-                ),
-              ),
-            );
-          }
-        },
-      ),
+          });
+        } else if (viewModel.status == Status.failure) {
+          WidgetsBinding.instance?.addPostFrameCallback((_) {
+            Navigator.pop(context);
+          });
+        }
+        return Container(
+          color: Colors.white,
+          constraints: const BoxConstraints.expand(),
+          child: const Center(
+            child: SpinKitDoubleBounce(
+              color: Colors.black54,
+            ),
+          ),
+        );
+      },
     );
   }
 }

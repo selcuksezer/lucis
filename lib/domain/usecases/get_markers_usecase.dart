@@ -7,15 +7,15 @@ import 'package:equatable/equatable.dart';
 import 'package:lucis/domain/failure.dart';
 
 class GetMarkerUseCase
-    implements BaseUseCase<List<ImageMarker>, GetMarkerParams> {
+    implements BaseUseCase<Stream<List<ImageMarker>>, GetMarkerParams> {
   final MarkerRepository _markerRepository;
 
   GetMarkerUseCase(this._markerRepository);
 
   @override
-  Future<Either<Failure, List<ImageMarker>>> execute(
+  Future<Either<Failure, Stream<List<ImageMarker>>>> execute(
       GetMarkerParams params) async {
-    return await _markerRepository.getMarkers(
+    return await _markerRepository.getMarkerStream(
       center: params.center,
       radius: params.radius,
       onTap: params.onTap,

@@ -30,7 +30,7 @@ class ImageImportScreen extends StatelessWidget {
                     if (image != null) {
                       Navigator.pushNamed(
                         context,
-                        Routes.imageImportScreen,
+                        Routes.imageUploadScreen,
                         arguments: image,
                       );
                     }
@@ -69,7 +69,7 @@ class ImageImportScreen extends StatelessWidget {
                     if (image != null) {
                       Navigator.pushNamed(
                         context,
-                        Routes.imageImportScreen,
+                        Routes.imageUploadScreen,
                         arguments: image,
                       );
                     }

@@ -98,7 +98,9 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
       try {
         List<FeedModel> feedList = [];
         for (var docSnapshot in event) {
-          if (docSnapshot.data() == null) continue;
+          if (docSnapshot.data() == null) {
+            continue;
+          }
           final feed = FeedModel.fromDocument(docSnapshot.data()!);
           final imageUrl = await FirebaseStorage.instance
               .ref('${feed.userId}/${feed.imageId}')

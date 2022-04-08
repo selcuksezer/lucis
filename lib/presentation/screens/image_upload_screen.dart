@@ -50,7 +50,9 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  if (viewModel.status == Status.ready) {
+                    Navigator.pop(context);
+                  }
                 },
                 icon: const Icon(
                   Icons.replay,
@@ -60,9 +62,12 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.of(context).popUntil(ModalRoute.withName(
-                    Routes.homeScreen,
-                  ));
+                  if (viewModel.status == Status.ready) {
+                    Navigator.of(context).popUntil((route) =>
+                        (route.settings.name == Routes.homeScreen)
+                            ? true
+                            : false);
+                  }
                 },
                 icon: const Icon(
                   Icons.clear,

@@ -5,6 +5,7 @@ import 'package:lucis/presentation/viewmodels/map_viewmodel.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lucis/presentation/components/feed_list_item.dart';
+import 'package:lucis/constants.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -17,17 +18,19 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen<MapViewModel>(builder: (context, viewModel, child) {
-      if (viewModel.isTapped) {
-        showModalBottomSheet(
-                isScrollControlled: true,
-                context: context,
-                builder: (context) =>
-                    FeedListItem(item: viewModel.tappedMarkerFeed))
-            .then((value) => viewModel.isTapped = false);
-      }
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        if (viewModel.isTapped) {
+          showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) =>
+                      FeedListItem(item: viewModel.tappedMarkerFeed))
+              .then((value) => viewModel.isTapped = false);
+        }
+      });
       return Scaffold(
         body: Stack(children: [
-          if (viewModel.isReady)
+          if (viewModel.isInitialized())
             GoogleMap(
               onMapCreated: viewModel.onMapCreated,
               onCameraIdle: viewModel.onCameraIdle,
@@ -38,7 +41,7 @@ class _MapScreenState extends State<MapScreen> {
               myLocationButtonEnabled: true,
               initialCameraPosition: CameraPosition(
                 target: viewModel.initialLocation,
-                zoom: 16,
+                zoom: kMapDefaultZoom,
               ),
             ),
           SafeArea(
@@ -62,7 +65,7 @@ class _MapScreenState extends State<MapScreen> {
                   [Colors.deepOrange],
                   [Colors.deepOrange]
                 ],
-                onToggle: (index) => viewModel.toggleMarkerType(),
+                onToggle: (index) => viewModel.toggleMarkerType(index),
               ),
             ),
           ),

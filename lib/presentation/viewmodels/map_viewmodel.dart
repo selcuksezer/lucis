@@ -18,7 +18,7 @@ class MapViewModel extends BaseViewModel {
   final _markers = <ImageMarker>{};
   late final GoogleMapController _mapController;
   bool isAvatar = true;
-  late final Location _initialLocation;
+  Location? _initialLocation;
   Location? _lastQueriedLocation;
   int _markerSize = ImageMarker.size;
   bool isTapped = false;
@@ -37,16 +37,19 @@ class MapViewModel extends BaseViewModel {
 
   get isReady => status == Status.ready;
   get initialLocation => LatLng(
-        _initialLocation.geoFirePoint.latitude,
-        _initialLocation.geoFirePoint.longitude,
+        _initialLocation!.geoFirePoint.latitude,
+        _initialLocation!.geoFirePoint.longitude,
       );
 
   Set<Marker> getMarkers() {
-    return _markers.map((imageMarker) {
+    final markerSet = _markers.map((imageMarker) {
+      print(_markerSize);
       return isAvatar
           ? imageMarker.avatarMarkerResized(_markerSize)
           : imageMarker.photoMarkerResized(_markerSize);
     }).toSet();
+    print(markerSet);
+    return markerSet;
   }
 
   void onMapCreated(GoogleMapController controller) {
@@ -62,7 +65,7 @@ class MapViewModel extends BaseViewModel {
       return;
     }
     _markerSize = _getMarkerSize();
-
+    notifyListeners();
     final dist = calculateDistance(
       _lastQueriedLocation!.geoFirePoint.latitude,
       _lastQueriedLocation!.geoFirePoint.longitude,
@@ -83,46 +86,53 @@ class MapViewModel extends BaseViewModel {
       return ImageMarker.size;
     } else {
       final zoomDiff =
-          (_lastCameraPosition!.zoom.clamp(13.5, 16.5) - ImageMarker.size);
+          (_lastCameraPosition!.zoom.clamp(13.5, 16.5) - kMapDefaultZoom);
 
-      return kDefaultMarkerSize * pow(2, zoomDiff).round();
+      return (ImageMarker.size * pow(2, zoomDiff)).round();
     }
   }
 
-  void toggleMarkerType() {
-    isAvatar = !isAvatar;
+  void toggleMarkerType(int? index) {
+    isAvatar = index == 0 ? true : false;
     notifyListeners();
   }
 
+  bool isInitialized() {
+    return _initialLocation == null ? false : true;
+  }
+
   Future<void> _fetchSession() async {
-    updateStatus(Status.busy);
     final sessionOrFailure =
         await _getSessionUseCase.execute(const GetSessionParams());
     sessionOrFailure.fold(
       (failure) => onFailure(failure),
       (session) {
         _lastQueriedLocation = session.location;
-        _initialLocation = session.location!;
+        _initialLocation = session.location;
         _fetchMarkers(session.location!.geoFirePoint);
+        notifyListeners();
       },
     );
   }
 
   Future<void> _fetchMarkers(GeoFirePoint center) async {
     updateStatus(Status.busy);
-
-    final markerOrFailure = await _getMarkerUseCase.execute(GetMarkerParams(
+    final markerStreamOrFailure =
+        await _getMarkerUseCase.execute(GetMarkerParams(
       center,
       kMapUpdateRange,
       _onMarkerTap,
     ));
-    markerOrFailure.fold(
+    print('markerusecase returned');
+    markerStreamOrFailure.fold(
       (failure) => onFailure(failure),
-      (markers) {
-        _markers.addAll(markers);
-        updateStatus(Status.ready);
-      },
+      (markerStream) => markerStream.listen(_addMarkers),
     );
+  }
+
+  void _addMarkers(List<ImageMarker> imageMarkers) {
+    _markers.addAll(imageMarkers);
+    updateStatus(Status.ready);
   }
 
   void _onMarkerTap(String id) {

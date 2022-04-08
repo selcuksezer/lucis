@@ -9,9 +9,6 @@ const kYouIcon = IconData(0xe803, fontFamily: 'CustomIcons');
 const kLoginButtonBackgroundColor = Colors.black54;
 const kRegisterButtonBackgroundColor = Colors.deepOrangeAccent;
 
-const kDefaultAvatarPath = 'assets/images/astronaut.png';
-const kDefaultMarkerSize = 50;
-
 const kMaxImageImportHeight = 600.0;
 
 const kTextFieldDecoration = InputDecoration(
@@ -37,3 +34,6 @@ const kDefaultFeedRadius = 1000.0; //km
 const kUserPageSize = 12;
 
 const kMapUpdateRange = 5.0; //km
+const kMapDefaultZoom = 16.0;
+const kDefaultAvatarPath = 'assets/images/astronaut.png';
+const kDefaultMarkerSize = 100;

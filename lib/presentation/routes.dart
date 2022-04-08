@@ -28,31 +28,41 @@ class RouteGenerator {
   static Route<dynamic> generateRoutes(RouteSettings settings) {
     switch (settings.name) {
       case Routes.welcomeScreen:
-        return MaterialPageRoute(builder: (_) => const WelcomeScreen());
+        return MaterialPageRoute(
+            settings: settings, builder: (_) => const WelcomeScreen());
       case Routes.loginScreen:
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
+        return MaterialPageRoute(
+            settings: settings, builder: (_) => const LoginScreen());
       case Routes.registrationScreen:
-        return MaterialPageRoute(builder: (_) => const RegistrationScreen());
+        return MaterialPageRoute(
+            settings: settings, builder: (_) => const RegistrationScreen());
       case Routes.splashScreen:
-        return MaterialPageRoute(builder: (_) => const SplashScreen());
+        return MaterialPageRoute(
+            settings: settings, builder: (_) => const SplashScreen());
       case Routes.homeScreen:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(
+            settings: settings, builder: (_) => const HomeScreen());
       case Routes.imageImportScreen:
-        return MaterialPageRoute(builder: (_) => const ImageImportScreen());
+        return MaterialPageRoute(
+            settings: settings, builder: (_) => const ImageImportScreen());
       case Routes.imageUploadScreen:
         var image = settings.arguments as File;
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => ImageUploadScreen(image: image),
         );
       case Routes.feedScreen:
-        return MaterialPageRoute(builder: (_) => const FeedScreen());
+        return MaterialPageRoute(
+            settings: settings, builder: (_) => const FeedScreen());
       case Routes.userScreen:
         var id = settings.arguments as String;
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => UserScreen(userId: id),
         );
       case Routes.mapScreen:
-        return MaterialPageRoute(builder: (_) => const MapScreen());
+        return MaterialPageRoute(
+            settings: settings, builder: (_) => const MapScreen());
       default:
         return invalidRoute();
     }

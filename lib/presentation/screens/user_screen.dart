@@ -17,8 +17,11 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
-    return BaseScreen<UserViewModel>(
-      builder: (context, viewModel, child) => Scaffold(
+    return BaseScreen<UserViewModel>(builder: (context, viewModel, child) {
+      if (viewModel.id == null) {
+        viewModel.fetchUserProfile(widget.userId);
+      }
+      return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black87,
           leading: IconButton(
@@ -140,7 +143,7 @@ class _UserScreenState extends State<UserScreen> {
             ),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 }
