@@ -21,6 +21,9 @@ class FeedListItem extends StatelessWidget {
       color: Colors.white,
       child: Column(
         children: [
+          const SizedBox(
+            height: 35.0,
+          ),
           Image.network(
             item.imageUrl,
             width: double.infinity,
@@ -49,7 +52,7 @@ class FeedListItem extends StatelessWidget {
                           )
                         : const Icon(
                             Icons.person_pin,
-                            color: Colors.black38,
+                            color: Color(0xFF303030),
                             size: 30.0,
                           ),
                     const SizedBox(
@@ -60,7 +63,7 @@ class FeedListItem extends StatelessWidget {
                       style: const TextStyle(
                           inherit: false,
                           fontSize: 15,
-                          color: Colors.black87,
+                          color: Color(0xFF303030),
                           fontWeight: FontWeight.w500,
                           letterSpacing: -1),
                     ),
@@ -80,8 +83,8 @@ class FeedListItem extends StatelessWidget {
                     },
                     child: const Icon(
                       Icons.map_outlined,
-                      color: Colors.black38,
-                      size: 30.0,
+                      color: Color(0xFF303030),
+                      size: 28.0,
                     ),
                   ),
                   InkWell(
@@ -93,13 +96,13 @@ class FeedListItem extends StatelessWidget {
                     child: item.isPin
                         ? const Icon(
                             Icons.push_pin,
-                            color: Colors.black38,
-                            size: 30.0,
+                            color: Color(0xFF303030),
+                            size: 25.0,
                           )
                         : const Icon(
                             Icons.push_pin_outlined,
-                            color: Colors.black38,
-                            size: 30.0,
+                            color: Color(0xFF303030),
+                            size: 25.0,
                           ),
                   ),
                   InkWell(
@@ -111,13 +114,13 @@ class FeedListItem extends StatelessWidget {
                     child: item.isFavorite
                         ? const Icon(
                             Icons.favorite,
-                            color: Colors.black38,
-                            size: 30.0,
+                            color: Colors.redAccent,
+                            size: 28.0,
                           )
                         : const Icon(
                             Icons.favorite_border,
-                            color: Colors.black38,
-                            size: 30.0,
+                            color: Color(0xFF303030),
+                            size: 28.0,
                           ),
                   ),
                   const SizedBox(

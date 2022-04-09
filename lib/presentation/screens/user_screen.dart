@@ -5,6 +5,7 @@ import 'package:lucis/presentation/screens/base_screen.dart';
 import 'package:lucis/presentation/viewmodels/user_viewmodel.dart';
 import 'package:lucis/presentation/components/image_grid_item.dart';
 import 'package:lucis/presentation/routes.dart';
+import 'package:lucis/utils/extensions/string_extension.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key, required this.userId}) : super(key: key);
@@ -73,7 +74,7 @@ class _UserScreenState extends State<UserScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.userId,
+                      viewModel.name?.toString().capitalize() ?? '',
                       style: const TextStyle(
                           inherit: false,
                           fontSize: 20,
@@ -82,7 +83,7 @@ class _UserScreenState extends State<UserScreen> {
                           letterSpacing: -1),
                     ),
                     Text(
-                      viewModel.name != null ? '@${viewModel.name}' : '',
+                      '@${widget.userId}',
                       style: const TextStyle(
                           inherit: false,
                           fontSize: 14,
@@ -145,7 +146,7 @@ class _UserScreenState extends State<UserScreen> {
                   },
                 ),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
+                  crossAxisCount: 3,
                 ),
               ),
             ),

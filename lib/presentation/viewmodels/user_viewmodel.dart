@@ -65,9 +65,8 @@ class UserViewModel extends BaseViewModel {
       (failure) => onFailure(failure),
       (userPage) {
         final newItems = userPage.values.first;
-        final nextPageKey =
-            pageToken == userPage.keys.first ? null : pageKey + 1;
-        pageToken == userPage.keys.first;
+        final nextPageKey = userPage.keys.first == null ? null : pageKey + 1;
+        pageToken = userPage.keys.first;
         _pagingController.appendPage(
           newItems,
           nextPageKey,

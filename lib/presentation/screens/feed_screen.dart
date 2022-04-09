@@ -18,27 +18,33 @@ class _FeedScreenState extends State<FeedScreen> {
     return BaseScreen<FeedViewModel>(
       builder: (context, viewModel, child) => Material(
         child: Stack(alignment: Alignment.topLeft, children: [
-          PagedListView(
-              pagingController: viewModel.pagingController,
-              builderDelegate: PagedChildBuilderDelegate(
-                itemBuilder: (context, item, index) => FeedListItem(
-                  item: item,
-                  onPinTap: viewModel.onPinTap,
-                  onFavoriteTap: viewModel.onFavoriteTap,
-                ),
-                firstPageProgressIndicatorBuilder: (context) {
-                  return const SpinKitCubeGrid(
-                    color: Colors.black54,
-                    size: 30.0,
-                  );
-                },
-                newPageProgressIndicatorBuilder: (context) {
-                  return const SpinKitCubeGrid(
-                    color: Colors.black54,
-                    size: 30.0,
-                  );
-                },
-              )),
+          PagedListView.separated(
+            pagingController: viewModel.pagingController,
+            builderDelegate: PagedChildBuilderDelegate(
+              itemBuilder: (context, item, index) => FeedListItem(
+                item: item,
+                onPinTap: viewModel.onPinTap,
+                onFavoriteTap: viewModel.onFavoriteTap,
+              ),
+              firstPageProgressIndicatorBuilder: (context) {
+                return const SpinKitCubeGrid(
+                  color: Colors.black54,
+                  size: 30.0,
+                );
+              },
+              newPageProgressIndicatorBuilder: (context) {
+                return const SpinKitCubeGrid(
+                  color: Colors.black54,
+                  size: 30.0,
+                );
+              },
+            ),
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(
+              color: Colors.black54,
+              height: 0.1,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(
               left: 8.0,
