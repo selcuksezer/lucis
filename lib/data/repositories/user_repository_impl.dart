@@ -160,17 +160,18 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> updateUserAvatar(
+  Future<Either<Failure, String>> updateUserAvatar(
     String id,
     File newAvatar,
   ) async {
     if (await _networkInfo.isConnected) {
       try {
-        await _userRemoteDataSource.updateUserAvatar(
-          id,
-          newAvatar,
+        return Right(
+          await _userRemoteDataSource.updateUserAvatar(
+            id,
+            newAvatar,
+          ),
         );
-        return const Right(true);
       } on ServerException {
         return const Left(Failure.serverFailure);
       } on UnknownException {

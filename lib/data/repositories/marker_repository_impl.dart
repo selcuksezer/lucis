@@ -29,7 +29,10 @@ class MarkerRepositoryImpl extends MarkerRepository {
   }) async {
     if (await _networkInfo.isConnected) {
       try {
-        final feedStream = await _feedDataSource.getFeedWithin(center, radius);
+        final feedStream = await _feedDataSource.getFeedWithin(
+          center,
+          radius,
+        );
         final markerStream = feedStream.feedStream.asyncMap((feedList) async {
           final markerList = <ImageMarker>[];
           await Future.forEach<Feed>(feedList, (feed) async {

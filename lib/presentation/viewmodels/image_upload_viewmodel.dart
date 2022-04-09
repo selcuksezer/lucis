@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:lucis/domain/usecases/upload_avatar_usecase.dart';
 import 'package:lucis/domain/usecases/upload_feed_usecase.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
 import 'package:lucis/domain/usecases/get_session_usecase.dart';
@@ -7,12 +8,15 @@ import 'package:lucis/domain/failure.dart';
 
 class ImageUploadViewModel extends BaseViewModel {
   final UploadFeedUseCase _uploadFeedUseCase;
+  final UploadAvatarUseCase _uploadAvatarUseCase;
   final GetSessionUseCase _getSessionUseCase;
+
   late Session _session;
 
   ImageUploadViewModel(
-    this._getSessionUseCase,
     this._uploadFeedUseCase,
+    this._uploadAvatarUseCase,
+    this._getSessionUseCase,
   );
 
   @override
@@ -41,6 +45,19 @@ class ImageUploadViewModel extends BaseViewModel {
     successOrFailure.fold(
       (failure) => onFailure(failure),
       (success) => updateStatus(Status.ready),
+    );
+  }
+
+  Future<void> uploadAvatar(File avatar) async {
+    updateStatus(Status.busy);
+    final successOrFailure =
+        await _uploadAvatarUseCase.execute(UploadAvatarParams(
+      _session.user!.id,
+      avatar,
+    ));
+    successOrFailure.fold(
+      (failure) => onFailure(failure),
+      (_) => updateStatus(Status.ready),
     );
   }
 

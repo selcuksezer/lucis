@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:lucis/presentation/routes.dart';
 
 class FeedListItem extends StatelessWidget {
   const FeedListItem({
     Key? key,
     required this.item,
+    this.onPinTap,
+    this.onFavoriteTap,
+    this.enablePin,
   }) : super(key: key);
 
   final dynamic item;
+  final void Function(String id)? onPinTap;
+  final void Function(String id)? onFavoriteTap;
+  final bool? enablePin;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +32,10 @@ class FeedListItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.userScreen,
+                      arguments: item.userId);
+                },
                 child: Row(
                   children: [
                     const SizedBox(
@@ -60,7 +70,14 @@ class FeedListItem extends StatelessWidget {
               Row(
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      if (enablePin == false) {
+                        Navigator.pop(context);
+                      } else {
+                        Navigator.pushNamed(context, Routes.mapScreen,
+                            arguments: item.location);
+                      }
+                    },
                     child: const Icon(
                       Icons.map_outlined,
                       color: Colors.black38,
@@ -68,20 +85,40 @@ class FeedListItem extends StatelessWidget {
                     ),
                   ),
                   InkWell(
-                    onTap: () {},
-                    child: const Icon(
-                      Icons.push_pin_outlined,
-                      color: Colors.black38,
-                      size: 30.0,
-                    ),
+                    onTap: () {
+                      if (onPinTap != null) {
+                        onPinTap!(item.imageId);
+                      }
+                    },
+                    child: item.isPin
+                        ? const Icon(
+                            Icons.push_pin,
+                            color: Colors.black38,
+                            size: 30.0,
+                          )
+                        : const Icon(
+                            Icons.push_pin_outlined,
+                            color: Colors.black38,
+                            size: 30.0,
+                          ),
                   ),
                   InkWell(
-                    onTap: () {},
-                    child: const Icon(
-                      Icons.favorite_border,
-                      color: Colors.black38,
-                      size: 30.0,
-                    ),
+                    onTap: () {
+                      if (onFavoriteTap != null) {
+                        onFavoriteTap!(item.imageId);
+                      }
+                    },
+                    child: item.isFavorite
+                        ? const Icon(
+                            Icons.favorite,
+                            color: Colors.black38,
+                            size: 30.0,
+                          )
+                        : const Icon(
+                            Icons.favorite_border,
+                            color: Colors.black38,
+                            size: 30.0,
+                          ),
                   ),
                   const SizedBox(
                     width: 10.0,
@@ -91,7 +128,7 @@ class FeedListItem extends StatelessWidget {
             ],
           ),
           const SizedBox(
-            height: 20.0,
+            height: 15.0,
           ),
         ],
       ),

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:lucis/domain/entities/feed.dart';
 import 'package:lucis/domain/entities/location.dart';
@@ -49,6 +48,7 @@ class FeedModel extends Feed {
       location: feed.location,
       favorites: feed.favorites,
       pins: feed.pins,
+      imageFile: feed.imageFile,
     );
   }
 

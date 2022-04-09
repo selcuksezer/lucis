@@ -9,6 +9,7 @@ import 'package:lucis/data/repositories/image_repository_impl.dart';
 import 'package:lucis/data/repositories/marker_repository_impl.dart';
 import 'package:lucis/data/repositories/session_repository_impl.dart';
 import 'package:lucis/data/repositories/user_repository_impl.dart';
+import 'package:lucis/domain/entities/session.dart';
 import 'package:lucis/domain/repositories/auth_repository.dart';
 import 'package:lucis/domain/repositories/feed_repository.dart';
 import 'package:lucis/domain/repositories/image_repository.dart';
@@ -29,6 +30,7 @@ import 'package:lucis/domain/usecases/login_usecase.dart';
 import 'package:lucis/domain/usecases/new_favorite_usecase.dart';
 import 'package:lucis/domain/usecases/new_pin_usecase.dart';
 import 'package:lucis/domain/usecases/register_usecase.dart';
+import 'package:lucis/domain/usecases/upload_avatar_usecase.dart';
 import 'package:lucis/domain/usecases/upload_feed_usecase.dart';
 import 'package:lucis/infrastructure/location/location_repository_impl.dart';
 import 'package:lucis/infrastructure/location/location_service.dart';
@@ -52,6 +54,8 @@ Future<void> init() async {
     () => FeedViewModel(
       sl(),
       sl(),
+      sl(),
+      sl(),
     ),
   );
   sl.registerFactory(
@@ -70,11 +74,14 @@ Future<void> init() async {
     () => ImageUploadViewModel(
       sl(),
       sl(),
+      sl(),
     ),
   );
   sl.registerFactory(() => LoginViewModel(sl()));
   sl.registerFactory(
     () => MapViewModel(
+      sl(),
+      sl(),
       sl(),
       sl(),
     ),
@@ -90,8 +97,12 @@ Future<void> init() async {
     () => UserViewModel(
       sl(),
       sl(),
+      sl(),
     ),
   );
+
+  // session
+  sl.registerLazySingleton(() => Session());
 
   // usecases
   sl.registerLazySingleton(
@@ -153,10 +164,12 @@ Future<void> init() async {
     () => NewFavoriteUseCase(
       sl(),
       sl(),
+      sl(),
     ),
   );
   sl.registerLazySingleton(
     () => NewPinUseCase(
+      sl(),
       sl(),
       sl(),
     ),
@@ -171,6 +184,12 @@ Future<void> init() async {
       sl(),
     ),
   );
+  sl.registerLazySingleton(
+    () => UploadAvatarUseCase(
+      sl(),
+      sl(),
+    ),
+  );
 
   // repositories
   sl.registerLazySingleton<AuthRepository>(
@@ -182,6 +201,7 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<FeedRepository>(
     () => FeedRepositoryImpl(
+      sl(),
       sl(),
       sl(),
     ),

@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lucis/presentation/screens/base_screen.dart';
 import 'package:lucis/presentation/viewmodels/user_viewmodel.dart';
 import 'package:lucis/presentation/components/image_grid_item.dart';
+import 'package:lucis/presentation/routes.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key, required this.userId}) : super(key: key);
@@ -29,13 +30,20 @@ class _UserScreenState extends State<UserScreen> {
             icon: const Icon(Icons.arrow_back_ios),
           ),
           actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.add,
-                size: 30,
+            if (viewModel.isCurrentUser())
+              IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, Routes.imageImportScreen,
+                          arguments: true)
+                      .then(
+                    (value) => viewModel.fetchUserProfile(widget.userId),
+                  );
+                },
+                icon: const Icon(
+                  Icons.add_a_photo,
+                  size: 30,
+                ),
               ),
-            ),
           ],
         ),
         body: Column(

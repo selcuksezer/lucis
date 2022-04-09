@@ -5,12 +5,15 @@ import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
 import 'package:lucis/domain/failure.dart';
 import 'package:lucis/constants.dart';
 import 'package:lucis/domain/entities/user.dart';
+import 'package:lucis/domain/usecases/get_session_usecase.dart';
 
 class UserViewModel extends BaseViewModel {
   final GetUserPageUseCase _getUserPageUseCase;
   final GetUserUseCase _getUserUseCase;
+  final GetSessionUseCase _getSessionUseCase;
 
   User? _user;
+  String? _currentId;
   String? _id;
   String? pageToken;
   final PagingController<int, String> _pagingController =
@@ -19,6 +22,7 @@ class UserViewModel extends BaseViewModel {
   UserViewModel(
     this._getUserPageUseCase,
     this._getUserUseCase,
+    this._getSessionUseCase,
   );
 
   get pagingController => _pagingController;
@@ -28,7 +32,9 @@ class UserViewModel extends BaseViewModel {
   get id => _id;
 
   @override
-  void init() {}
+  void init() {
+    _fetchSession();
+  }
 
   Future<void> fetchUserProfile(String id) async {
     _id = id;
@@ -45,8 +51,11 @@ class UserViewModel extends BaseViewModel {
     );
   }
 
+  bool isCurrentUser() {
+    return _id == _currentId;
+  }
+
   Future<void> _fetchUserPage(int pageKey) async {
-    print('user fetch page called');
     final feedOrFailure = await _getUserPageUseCase.execute(GetUserPageParams(
       _id!,
       kUserPageSize,
@@ -55,16 +64,24 @@ class UserViewModel extends BaseViewModel {
     feedOrFailure.fold(
       (failure) => onFailure(failure),
       (userPage) {
-        print('user fetch page success');
-
-        pageToken = userPage.keys.first;
         final newItems = userPage.values.first;
-        final nextPageKey = newItems.isEmpty ? null : pageKey + 1;
+        final nextPageKey =
+            pageToken == userPage.keys.first ? null : pageKey + 1;
+        pageToken == userPage.keys.first;
         _pagingController.appendPage(
           newItems,
           nextPageKey,
         );
       },
+    );
+  }
+
+  Future<void> _fetchSession() async {
+    final sessionOrFailure =
+        await _getSessionUseCase.execute(const GetSessionParams());
+    sessionOrFailure.fold(
+      (failure) => onFailure(failure),
+      (session) => _currentId = session.user?.id,
     );
   }
 

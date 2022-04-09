@@ -11,6 +11,8 @@ class Feed {
   String? avatar;
   String? imageUrl;
   File? imageFile;
+  bool isFavorite = false;
+  bool isPin = false;
 
   Feed({
     required this.userId,

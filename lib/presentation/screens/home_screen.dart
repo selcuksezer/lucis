@@ -81,10 +81,13 @@ class HomeScreen extends StatelessWidget {
                             icon: kMapIcon,
                             onPressed: () {
                               if (viewModel.status == Status.ready) {
-                                Navigator.pushNamed(
-                                  context,
-                                  Routes.mapScreen,
-                                );
+                                if (viewModel.location != null) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.mapScreen,
+                                    arguments: viewModel.location!,
+                                  );
+                                }
                               } else if (viewModel.status == Status.failure) {
                                 //TODO: show location dialog
                               }

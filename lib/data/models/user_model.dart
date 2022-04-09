@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:lucis/domain/entities/user.dart';
 import 'package:lucis/domain/entities/location.dart';
 
@@ -32,8 +34,17 @@ class UserModel extends User {
               doc['images'],
             ),
       lucis: doc['lucis'],
-      favorites: doc['favorites'] ?? <String>[],
-      pins: doc['pins'] ?? <Location>[],
+      favorites: doc['favorites'] == null
+          ? <String>[]
+          : List<String>.from(doc['favorites']),
+      pins: doc['pins'] == null
+          ? <Location>[]
+          : List<GeoPoint>.from(doc['pins'])
+              .map((geopoint) => Location(GeoFirePoint(
+                    geopoint.latitude,
+                    geopoint.longitude,
+                  )))
+              .toList(),
     );
   }
 

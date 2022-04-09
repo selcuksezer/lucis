@@ -10,10 +10,14 @@ import 'package:lucis/domain/failure.dart';
 import 'package:lucis/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lucis/domain/usecases/get_session_usecase.dart';
+import 'package:lucis/domain/usecases/new_favorite_usecase.dart';
+import 'package:lucis/domain/usecases/new_pin_usecase.dart';
 
 class MapViewModel extends BaseViewModel {
   final GetMarkerUseCase _getMarkerUseCase;
   final GetSessionUseCase _getSessionUseCase;
+  final NewFavoriteUseCase _newFavoriteUseCase;
+  final NewPinUseCase _newPinUseCase;
 
   final _markers = <ImageMarker>{};
   late final GoogleMapController _mapController;
@@ -28,6 +32,8 @@ class MapViewModel extends BaseViewModel {
   MapViewModel(
     this._getMarkerUseCase,
     this._getSessionUseCase,
+    this._newFavoriteUseCase,
+    this._newPinUseCase,
   );
 
   @override
@@ -35,20 +41,18 @@ class MapViewModel extends BaseViewModel {
     _fetchSession();
   }
 
+  set initialLocation(Location location) {
+    _initialLocation = location;
+  }
+
   get isReady => status == Status.ready;
-  get initialLocation => LatLng(
-        _initialLocation!.geoFirePoint.latitude,
-        _initialLocation!.geoFirePoint.longitude,
-      );
 
   Set<Marker> getMarkers() {
     final markerSet = _markers.map((imageMarker) {
-      print(_markerSize);
       return isAvatar
           ? imageMarker.avatarMarkerResized(_markerSize)
           : imageMarker.photoMarkerResized(_markerSize);
     }).toSet();
-    print(markerSet);
     return markerSet;
   }
 
@@ -81,6 +85,52 @@ class MapViewModel extends BaseViewModel {
     }
   }
 
+  void onPinTap(String id) {
+    if (tappedMarkerFeed == null) {
+      return;
+    }
+    if (tappedMarkerFeed!.isPin) {
+      tappedMarkerFeed!.isPin = false;
+      _newPinUseCase.execute(NewPinParams(
+        tappedMarkerFeed!.userId,
+        tappedMarkerFeed!.imageId,
+        tappedMarkerFeed!.location,
+        -1,
+      ));
+    } else {
+      tappedMarkerFeed!.isPin = true;
+      _newPinUseCase.execute(NewPinParams(
+        tappedMarkerFeed!.userId,
+        tappedMarkerFeed!.imageId,
+        tappedMarkerFeed!.location,
+        1,
+      ));
+    }
+    notifyListeners();
+  }
+
+  void onFavoriteTap(String id) {
+    if (tappedMarkerFeed == null) {
+      return;
+    }
+    if (tappedMarkerFeed!.isFavorite) {
+      tappedMarkerFeed!.isFavorite = false;
+      _newFavoriteUseCase.execute(NewFavoriteParams(
+        tappedMarkerFeed!.userId,
+        tappedMarkerFeed!.imageId,
+        -1,
+      ));
+    } else {
+      tappedMarkerFeed!.isFavorite = true;
+      _newFavoriteUseCase.execute(NewFavoriteParams(
+        tappedMarkerFeed!.userId,
+        tappedMarkerFeed!.imageId,
+        1,
+      ));
+    }
+    notifyListeners();
+  }
+
   int _getMarkerSize() {
     if (_lastCameraPosition == null) {
       return ImageMarker.size;
@@ -97,10 +147,6 @@ class MapViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  bool isInitialized() {
-    return _initialLocation == null ? false : true;
-  }
-
   Future<void> _fetchSession() async {
     final sessionOrFailure =
         await _getSessionUseCase.execute(const GetSessionParams());
@@ -108,9 +154,7 @@ class MapViewModel extends BaseViewModel {
       (failure) => onFailure(failure),
       (session) {
         _lastQueriedLocation = session.location;
-        _initialLocation = session.location;
-        _fetchMarkers(session.location!.geoFirePoint);
-        notifyListeners();
+        _fetchMarkers(_initialLocation!.geoFirePoint);
       },
     );
   }
@@ -123,7 +167,6 @@ class MapViewModel extends BaseViewModel {
       kMapUpdateRange,
       _onMarkerTap,
     ));
-    print('markerusecase returned');
     markerStreamOrFailure.fold(
       (failure) => onFailure(failure),
       (markerStream) => markerStream.listen(_addMarkers),
@@ -148,7 +191,9 @@ class MapViewModel extends BaseViewModel {
       case Failure.connectionFailure:
         {
           //TODO: Listen for reconnection
-          await _fetchSession();
+          if (_initialLocation != null) {
+            await _fetchMarkers(_initialLocation!.geoFirePoint);
+          }
         }
         break;
       default:

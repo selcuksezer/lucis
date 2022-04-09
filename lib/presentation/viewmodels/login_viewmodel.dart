@@ -42,6 +42,7 @@ class LoginViewModel extends BaseViewModel {
 
   @override
   Future<void> handleFailure() async {
+    print(failure);
     switch (failure) {
       default:
         break;

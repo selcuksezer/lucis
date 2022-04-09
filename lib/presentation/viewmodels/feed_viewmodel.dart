@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:lucis/domain/entities/feed_stream.dart';
 import 'package:lucis/domain/usecases/get_feed_usecase.dart';
 import 'package:lucis/domain/usecases/get_session_usecase.dart';
+import 'package:lucis/domain/usecases/new_favorite_usecase.dart';
+import 'package:lucis/domain/usecases/new_pin_usecase.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
 import 'package:lucis/domain/entities/session.dart';
 import 'package:lucis/domain/failure.dart';
@@ -11,6 +15,8 @@ import 'package:lucis/domain/entities/feed.dart';
 class FeedViewModel extends BaseViewModel {
   final GetSessionUseCase _getSessionUseCase;
   final GetFeedUseCase _getFeedUseCase;
+  final NewFavoriteUseCase _newFavoriteUseCase;
+  final NewPinUseCase _newPinUseCase;
 
   late Session _session;
   late FeedStream _feed;
@@ -21,6 +27,8 @@ class FeedViewModel extends BaseViewModel {
   FeedViewModel(
     this._getSessionUseCase,
     this._getFeedUseCase,
+    this._newFavoriteUseCase,
+    this._newPinUseCase,
   );
 
   get pagingController => _pagingController;
@@ -28,6 +36,48 @@ class FeedViewModel extends BaseViewModel {
   @override
   void init() {
     _fetchSession();
+  }
+
+  void onPinTap(String id) {
+    final index = _feedList.indexWhere((feed) => feed.imageId == id);
+    if (_feedList[index].isPin) {
+      _feedList[index].isPin = false;
+      _newPinUseCase.execute(NewPinParams(
+        _session.user!.id,
+        _feedList[index].imageId,
+        _feedList[index].location,
+        -1,
+      ));
+    } else {
+      _feedList[index].isPin = true;
+      _newPinUseCase.execute(NewPinParams(
+        _session.user!.id,
+        _feedList[index].imageId,
+        _feedList[index].location,
+        1,
+      ));
+    }
+    notifyListeners();
+  }
+
+  void onFavoriteTap(String id) {
+    final index = _feedList.indexWhere((feed) => feed.imageId == id);
+    if (_feedList[index].isFavorite) {
+      _feedList[index].isFavorite = false;
+      _newFavoriteUseCase.execute(NewFavoriteParams(
+        _session.user!.id,
+        _feedList[index].imageId,
+        -1,
+      ));
+    } else {
+      _feedList[index].isFavorite = true;
+      _newFavoriteUseCase.execute(NewFavoriteParams(
+        _session.user!.id,
+        _feedList[index].imageId,
+        1,
+      ));
+    }
+    notifyListeners();
   }
 
   Future<void> _fetchSession() async {
@@ -66,14 +116,13 @@ class FeedViewModel extends BaseViewModel {
       return;
     } else {
       _feedList.addAll(feedItems);
-      print(_feedList);
       updateStatus(Status.ready);
-      _pagingController.addPageRequestListener(fetchFeedPage);
+      _pagingController.addPageRequestListener(_fetchFeedPage);
       _pagingController.notifyListeners();
     }
   }
 
-  void fetchFeedPage(int pageKey) {
+  void _fetchFeedPage(int pageKey) {
     if (status == Status.ready) {
       final startIdx = kFeedPageSize * pageKey;
       final nextStartIdx = startIdx + kFeedPageSize;

@@ -32,7 +32,7 @@ abstract class UserRepository {
     Location newPin, {
     bool add,
   });
-  Future<Either<Failure, bool>> updateUserAvatar(
+  Future<Either<Failure, String>> updateUserAvatar(
     String id,
     File newAvatar,
   );

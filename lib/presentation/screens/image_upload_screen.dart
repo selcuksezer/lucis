@@ -7,11 +7,11 @@ import 'package:lucis/presentation/components/show_dialog.dart';
 import 'package:lucis/presentation/routes.dart';
 
 class ImageUploadScreen extends StatefulWidget {
-  final File image;
+  final ImageUploadArgs args;
 
-  const ImageUploadScreen({
+  const ImageUploadScreen(
+    this.args, {
     Key? key,
-    required this.image,
   }) : super(key: key);
 
   @override
@@ -37,7 +37,11 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
             children: [
               IconButton(
                 onPressed: () async {
-                  await viewModel.uploadImage(widget.image);
+                  if (widget.args.isAvatar == null) {
+                    await viewModel.uploadImage(widget.args.image);
+                  } else {
+                    await viewModel.uploadAvatar(widget.args.image);
+                  }
                   if (viewModel.status == Status.ready) {
                     Navigator.pop(context);
                   }
@@ -63,10 +67,17 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
               IconButton(
                 onPressed: () {
                   if (viewModel.status == Status.ready) {
-                    Navigator.of(context).popUntil((route) =>
-                        (route.settings.name == Routes.homeScreen)
-                            ? true
-                            : false);
+                    if (widget.args.isAvatar == null) {
+                      Navigator.of(context).popUntil((route) =>
+                          (route.settings.name == Routes.homeScreen)
+                              ? true
+                              : false);
+                    } else {
+                      Navigator.of(context).popUntil((route) =>
+                          (route.settings.name == Routes.userScreen)
+                              ? true
+                              : false);
+                    }
                   }
                 },
                 icon: const Icon(
@@ -81,7 +92,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
         body: Stack(
           children: [
             Image.file(
-              widget.image,
+              widget.args.image,
               fit: BoxFit.cover,
               width: double.infinity,
             ),
@@ -95,10 +106,20 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
             if (viewModel.status == Status.failure)
               ShowDialog(
                   title: viewModel.message.title!,
-                  description: 'Check your network connection.')
+                  description: viewModel.message.description!)
           ],
         ),
       ),
     );
   }
+}
+
+class ImageUploadArgs {
+  final File image;
+  final bool? isAvatar;
+
+  ImageUploadArgs(
+    this.image,
+    this.isAvatar,
+  );
 }

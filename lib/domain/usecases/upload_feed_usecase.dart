@@ -27,7 +27,6 @@ class UploadFeedUseCase implements BaseUseCase<bool, UploadFeedParams> {
       pins: 0,
       imageFile: params.image,
     );
-
     return await _feedRepository.uploadFeed(feed);
   }
 }

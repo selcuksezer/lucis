@@ -28,7 +28,7 @@ abstract class UserRemoteDataSource {
     Location newPin, {
     bool add = true,
   });
-  Future<void> updateUserAvatar(String id, File newAvatar);
+  Future<String> updateUserAvatar(String id, File newAvatar);
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
@@ -61,13 +61,17 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         final userDoc = userQueryData.docs.first.data();
         final userModel = UserModel.fromDocument(userDoc);
         String? avatarUrl;
+
+        final avatarRef = FirebaseStorage.instance.ref('$id/$id-avatar');
+
         try {
-          avatarUrl = await FirebaseStorage.instance
-              .ref('$id/$id-avatar')
-              .getDownloadURL();
-        } finally {
-          userModel.avatarUrl = avatarUrl;
+          avatarUrl = await avatarRef.getDownloadURL();
+        } on FirebaseException {
+          // no avatar exists
         }
+
+        userModel.avatarUrl = avatarUrl;
+
         return userModel;
       } on FirebaseException catch (e) {
         throw (ServerException(
@@ -213,9 +217,11 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<void> updateUserAvatar(String id, File newAvatar) async {
+  Future<String> updateUserAvatar(String id, File newAvatar) async {
     try {
-      await FirebaseStorage.instance.ref('$id/$id-avatar').putFile(newAvatar);
+      final storageRef = FirebaseStorage.instance.ref('$id/$id-avatar');
+      await storageRef.putFile(newAvatar);
+      return await storageRef.getDownloadURL();
     } on FirebaseException catch (e) {
       throw (ServerException(
           'FirebaseException. Code: ${e.code}. Message: ${e.message}. StackTrace: ${e.stackTrace}'));

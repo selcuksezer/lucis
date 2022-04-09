@@ -73,7 +73,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     _userID = value;
                   },
                   decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Tag already exists!',
+                    hintText: 'User tag',
                     errorText: viewModel.isUserError()
                         ? viewModel.message.description
                         : null,

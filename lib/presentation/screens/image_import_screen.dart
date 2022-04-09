@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:lucis/presentation/screens/base_screen.dart';
+import 'package:lucis/presentation/screens/image_upload_screen.dart';
 import 'package:lucis/presentation/viewmodels/image_import_viewmodel.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
 import 'package:lucis/presentation/routes.dart';
 
 class ImageImportScreen extends StatelessWidget {
-  static const route = 'image-import';
+  final bool? isAvatar;
 
-  const ImageImportScreen({Key? key}) : super(key: key);
+  const ImageImportScreen({
+    Key? key,
+    this.isAvatar,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+
     return BaseScreen<ImageImportViewModel>(
       builder: (context, viewModel, child) => Scaffold(
         appBar: AppBar(
@@ -31,7 +36,10 @@ class ImageImportScreen extends StatelessWidget {
                       Navigator.pushNamed(
                         context,
                         Routes.imageUploadScreen,
-                        arguments: image,
+                        arguments: ImageUploadArgs(
+                          image,
+                          isAvatar,
+                        ),
                       );
                     }
                   }
@@ -70,7 +78,10 @@ class ImageImportScreen extends StatelessWidget {
                       Navigator.pushNamed(
                         context,
                         Routes.imageUploadScreen,
-                        arguments: image,
+                        arguments: ImageUploadArgs(
+                          image,
+                          isAvatar,
+                        ),
                       );
                     }
                   }

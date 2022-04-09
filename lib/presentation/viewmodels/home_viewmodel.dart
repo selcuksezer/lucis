@@ -20,6 +20,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   get userId => _session.user?.id;
+  get location => _session.location;
 
   Future<void> _fetchSession() async {
     updateStatus(Status.busy);
