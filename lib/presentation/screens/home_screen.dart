@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lucis/constants.dart';
+import 'package:lucis/utils/constants.dart';
 import 'package:lucis/presentation/screens/base_screen.dart';
 import 'package:lucis/presentation/viewmodels/home_viewmodel.dart';
 import 'package:lucis/presentation/components/vertical_icon_button.dart';

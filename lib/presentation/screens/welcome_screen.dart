@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucis/presentation/components/rounded_button.dart';
-import 'package:lucis/constants.dart';
+import 'package:lucis/utils/constants.dart';
 import 'package:lucis/presentation/routes.dart';
 
 class WelcomeScreen extends StatefulWidget {

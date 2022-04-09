@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:lucis/domain/failure.dart';
 import 'package:lucis/domain/repositories/image_repository.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lucis/constants.dart';
+import 'package:lucis/utils/constants.dart';
 
 class ImageRepositoryImpl implements ImageRepository {
   @override

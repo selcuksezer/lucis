@@ -2,7 +2,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image/image.dart';
 import 'package:lucis/domain/entities/feed.dart';
 import 'package:lucis/utils/extensions/image_extension.dart';
-import 'package:lucis/constants.dart';
+import 'package:lucis/utils/constants.dart';
 
 class ImageMarker {
   static const int size = kDefaultMarkerSize;

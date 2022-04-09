@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lucis/presentation/components/feed_list_item.dart';
-import 'package:lucis/constants.dart';
+import 'package:lucis/utils/constants.dart';
 
 class MapScreen extends StatefulWidget {
   final Location initialLocation;

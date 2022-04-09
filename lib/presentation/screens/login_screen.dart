@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:lucis/constants.dart';
+import 'package:lucis/utils/constants.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
 import 'package:lucis/presentation/viewmodels/login_viewmodel.dart';
 import 'package:lucis/presentation/components/rounded_button.dart';

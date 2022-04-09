@@ -3,7 +3,7 @@ import 'package:lucis/domain/usecases/get_user_page_usecase.dart';
 import 'package:lucis/domain/usecases/get_user_usecase.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
 import 'package:lucis/domain/failure.dart';
-import 'package:lucis/constants.dart';
+import 'package:lucis/utils/constants.dart';
 import 'package:lucis/domain/entities/user.dart';
 import 'package:lucis/domain/usecases/get_session_usecase.dart';
 

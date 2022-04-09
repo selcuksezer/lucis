@@ -7,7 +7,7 @@ import 'package:lucis/domain/entities/marker.dart';
 import 'package:lucis/domain/usecases/get_markers_usecase.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
 import 'package:lucis/domain/failure.dart';
-import 'package:lucis/constants.dart';
+import 'package:lucis/utils/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lucis/domain/usecases/get_session_usecase.dart';
 import 'package:lucis/domain/usecases/new_favorite_usecase.dart';

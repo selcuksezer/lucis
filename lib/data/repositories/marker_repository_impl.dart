@@ -10,7 +10,7 @@ import 'package:dartz/dartz.dart';
 import 'package:lucis/domain/failure.dart';
 import 'package:lucis/infrastructure/network/network_info.dart';
 import 'package:lucis/data/exceptions.dart';
-import 'package:lucis/constants.dart';
+import 'package:lucis/utils/constants.dart';
 
 class MarkerRepositoryImpl extends MarkerRepository {
   final FeedRemoteDataSource _feedDataSource;

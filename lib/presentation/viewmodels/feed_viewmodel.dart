@@ -9,7 +9,7 @@ import 'package:lucis/domain/usecases/new_pin_usecase.dart';
 import 'package:lucis/presentation/viewmodels/base_viewmodel.dart';
 import 'package:lucis/domain/entities/session.dart';
 import 'package:lucis/domain/failure.dart';
-import 'package:lucis/constants.dart';
+import 'package:lucis/utils/constants.dart';
 import 'package:lucis/domain/entities/feed.dart';
 
 class FeedViewModel extends BaseViewModel {
