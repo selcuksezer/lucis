@@ -24,10 +24,17 @@ class FeedListItem extends StatelessWidget {
           const SizedBox(
             height: 35.0,
           ),
-          Image.network(
-            item.imageUrl,
-            width: double.infinity,
-          ),
+          enablePin == false
+              ? Flexible(
+                  child: Image.network(
+                    item.imageUrl,
+                    width: double.infinity,
+                  ),
+                )
+              : Image.network(
+                  item.imageUrl,
+                  width: double.infinity,
+                ),
           const SizedBox(
             height: 8.0,
           ),

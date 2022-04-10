@@ -33,7 +33,7 @@ const kDefaultFeedRadius = 1000.0; //km
 
 const kUserPageSize = 12;
 
-const kMapUpdateRange = 5.0; //km
+const kMapUpdateRange = 50.0; //km
 const kMapDefaultZoom = 16.0;
 const kDefaultAvatarPath = 'assets/images/astronaut.png';
-const kDefaultMarkerSize = 150;
+const kDefaultMarkerSize = 200;
